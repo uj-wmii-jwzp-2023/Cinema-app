@@ -8,7 +8,6 @@
 - możliwość usunięcia konta
 
 ### Konta pracowników:
-- funkcjonalność zwykłego konta
 - tworzenie seansów
 - modyfikacja seansów
 - usuwanie seansów
@@ -24,3 +23,4 @@
 
 ### Film:
 - sprawdzenie kiedy dany film będzie wyświetlany w danym kinie
+- wyświetlenie szczegółów dotyczących filmu
