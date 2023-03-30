@@ -5,13 +5,13 @@ import uj.wmii.jwzp.Cinemaapp.models.User;
 import java.util.List;
 
 public interface UserService {
-    List<User> users();
+    List<User> getUsers();
 
     User addUser(User user);
 
-    void deleteUser(Long id);
+    String deleteUser(Long id);
 
-    User updateUser(Long id,User user);
+    String updateUser(Long id, String email, String name, String password);
 
-    User patchUser(Long id, User user);
+    String patchUser(Long id, String email, String name, String password);
 }
