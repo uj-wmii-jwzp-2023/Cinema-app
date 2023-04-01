@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
         }
 
         repository.deleteById(id);
-        return "User accout with id " + id + " was deleted";
+        return "User account with id " + id + " was deleted";
     }
 
     @Transactional
