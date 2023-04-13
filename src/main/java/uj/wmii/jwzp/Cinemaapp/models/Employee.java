@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

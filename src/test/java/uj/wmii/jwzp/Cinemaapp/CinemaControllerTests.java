@@ -11,7 +11,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import uj.wmii.jwzp.Cinemaapp.controllers.CinemaController;
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
+import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.services.CinemaService;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -31,7 +35,8 @@ public class CinemaControllerTests {
 
     @Test
     public void itShouldReturnCreatedCinema() throws Exception {
-        Cinema newCinema = new Cinema("Bonarka", "Krakow ul. 3 Maja");
+        List<CinemaHall> cinemaHalls = new LinkedList<>();
+        Cinema newCinema = new Cinema("Bonarka", "Krakow ul. 3 Maja", cinemaHalls);
 
         String requestBody = objectMapper.writeValueAsString(newCinema);
 

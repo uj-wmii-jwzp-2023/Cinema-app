@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
+import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.repositories.CinemaRepository;
 
 import java.util.List;
@@ -61,10 +62,10 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Transactional
-    public String updateCinema(Long id, String name, String address) {
+    public String updateCinema(Long id, String name, String address, List<CinemaHall> cinemaHalls) {
         Cinema cinema = repository.findById(id).orElse(null);
         if(cinema == null) {
-            Cinema newCinema = new Cinema(name,address);
+            Cinema newCinema = new Cinema(name,address, cinemaHalls);
 
             addCinema(newCinema);
             return "Cinema created";

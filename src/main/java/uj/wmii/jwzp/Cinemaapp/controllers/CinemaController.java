@@ -3,6 +3,7 @@ package uj.wmii.jwzp.Cinemaapp.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
+import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.services.CinemaService;
 
 import java.util.List;
@@ -35,14 +36,15 @@ public class CinemaController {
     @PutMapping("{cinemaId}")
     public String updateCinema(@PathVariable("cinemaId") Long id,
                                @RequestParam String name,
-                               @RequestParam String password) {
-        return service.updateCinema(id,name,password);
+                               @RequestParam String password,
+                               @RequestParam List<CinemaHall> cinemaHalls) {
+        return service.updateCinema(id,name,password,cinemaHalls);
     }
 
     @PatchMapping("{cinemaId}")
-    public String patchUser(@PathVariable("cinemaId") Long id,
+    public String patchCinema(@PathVariable("cinemaId") Long id,
                             @RequestParam(required = false) String name,
                             @RequestParam(required = false) String password) {
-        return service.updateCinema(id, name, password);
+        return service.patchCinema(id, name, password);
     }
 }

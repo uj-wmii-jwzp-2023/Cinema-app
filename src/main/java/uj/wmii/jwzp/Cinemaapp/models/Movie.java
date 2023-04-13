@@ -2,6 +2,8 @@ package uj.wmii.jwzp.Cinemaapp.models;
 
 import jakarta.persistence.*;
 
+import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -9,16 +11,26 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
+    private Duration duration;
+    @Column(nullable = false)
     private String description;
+    @Column(nullable = false)
     private String directors;
+    @Column(nullable = false)
+    @ManyToMany
+    private List<Screening> screenings;
 
     public Movie(){}
 
-    public Movie(String name, String description, String directors) {
+    public Movie(String name, Duration duration, String description, String directors, List<Screening> screenings) {
         this.name = name;
+        this.duration = duration;
         this.description = description;
         this.directors = directors;
+        this.screenings = screenings;
     }
 
 
@@ -75,5 +87,21 @@ public class Movie {
                 ", description='" + description + '\'' +
                 ", directors='" + directors + '\'' +
                 '}';
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public List<Screening> getScreenings() {
+        return screenings;
+    }
+
+    public void setScreenings(List<Screening> screenings) {
+        this.screenings = screenings;
     }
 }

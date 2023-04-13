@@ -1,6 +1,7 @@
 package uj.wmii.jwzp.Cinemaapp.services;
 
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
+import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface CinemaService {
 
     String deleteCinema(Long id);
 
-    String updateCinema(Long id, String name, String address);
+    String updateCinema(Long id, String name, String address, List<CinemaHall> cinemaHalls);
 
     String patchCinema(Long id, String name, String address);
 }
