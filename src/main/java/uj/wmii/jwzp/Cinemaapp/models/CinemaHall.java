@@ -5,16 +5,18 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "cinema_halls")
 public class CinemaHall {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @OneToOne
-    @Column(nullable = false)
+    @PrimaryKeyJoinColumn
     private Cinema cinema;
     @Column(nullable = false)
     @OneToMany
     private List<Seat> seats;
+
 
     public CinemaHall() { }
 

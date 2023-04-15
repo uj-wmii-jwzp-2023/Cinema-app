@@ -1,4 +1,4 @@
-package uj.wmii.jwzp.Cinemaapp.services;
+package uj.wmii.jwzp.Cinemaapp.services.interfaces;
 
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;

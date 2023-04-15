@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table
+@Table(name = "employees")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -16,6 +16,7 @@ public class Employee {
     private String name;
     @Column(nullable = false)
     private String password;
+
 
     public Employee() {}
 

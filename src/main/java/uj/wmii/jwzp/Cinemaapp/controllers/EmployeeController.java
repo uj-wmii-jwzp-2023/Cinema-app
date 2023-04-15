@@ -3,7 +3,7 @@ package uj.wmii.jwzp.Cinemaapp.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import uj.wmii.jwzp.Cinemaapp.models.Employee;
-import uj.wmii.jwzp.Cinemaapp.services.EmployeeService;
+import uj.wmii.jwzp.Cinemaapp.services.interfaces.EmployeeService;
 
 import java.util.List;
 

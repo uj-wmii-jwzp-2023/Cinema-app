@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table
+@Table(name = "cinemas")
 public class Cinema {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -18,6 +18,7 @@ public class Cinema {
     @Column(nullable = false)
     @OneToMany
     private List<CinemaHall> cinemaHalls;
+
 
     public Cinema() {
     }

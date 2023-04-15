@@ -2,11 +2,8 @@ package uj.wmii.jwzp.Cinemaapp.models;
 
 import jakarta.persistence.*;
 
-enum Availability {
-FREE, TAKEN
-}
-
 @Entity
+@Table(name = "seats")
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

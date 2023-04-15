@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import uj.wmii.jwzp.Cinemaapp.controllers.UserController;
 import uj.wmii.jwzp.Cinemaapp.models.User;
-import uj.wmii.jwzp.Cinemaapp.services.UserService;
+import uj.wmii.jwzp.Cinemaapp.services.interfaces.UserService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;

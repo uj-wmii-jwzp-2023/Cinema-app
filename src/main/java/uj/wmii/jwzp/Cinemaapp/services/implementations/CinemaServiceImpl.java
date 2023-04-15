@@ -1,4 +1,4 @@
-package uj.wmii.jwzp.Cinemaapp.services;
+package uj.wmii.jwzp.Cinemaapp.services.implementations;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.repositories.CinemaRepository;
+import uj.wmii.jwzp.Cinemaapp.services.interfaces.CinemaService;
 
 import java.util.List;
 

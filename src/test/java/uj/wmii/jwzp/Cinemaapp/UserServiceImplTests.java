@@ -11,8 +11,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import uj.wmii.jwzp.Cinemaapp.models.User;
 import uj.wmii.jwzp.Cinemaapp.repositories.UserRepository;
-import uj.wmii.jwzp.Cinemaapp.services.UserService;
-import uj.wmii.jwzp.Cinemaapp.services.UserServiceImpl;
+import uj.wmii.jwzp.Cinemaapp.services.interfaces.UserService;
+import uj.wmii.jwzp.Cinemaapp.services.implementations.UserServiceImpl;
 
 import java.util.Optional;
 

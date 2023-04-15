@@ -12,8 +12,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.repositories.CinemaRepository;
-import uj.wmii.jwzp.Cinemaapp.services.CinemaService;
-import uj.wmii.jwzp.Cinemaapp.services.CinemaServiceImpl;
+import uj.wmii.jwzp.Cinemaapp.services.interfaces.CinemaService;
+import uj.wmii.jwzp.Cinemaapp.services.implementations.CinemaServiceImpl;
 
 import java.util.LinkedList;
 import java.util.List;

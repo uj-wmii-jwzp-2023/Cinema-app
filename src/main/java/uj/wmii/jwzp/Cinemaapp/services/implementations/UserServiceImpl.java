@@ -1,10 +1,11 @@
-package uj.wmii.jwzp.Cinemaapp.services;
+package uj.wmii.jwzp.Cinemaapp.services.implementations;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uj.wmii.jwzp.Cinemaapp.models.Employee;
-import uj.wmii.jwzp.Cinemaapp.repositories.EmployeeRepository;
+import uj.wmii.jwzp.Cinemaapp.models.User;
+import uj.wmii.jwzp.Cinemaapp.repositories.UserRepository;
+import uj.wmii.jwzp.Cinemaapp.services.interfaces.UserService;
 
 import java.util.List;
 import java.util.Objects;
@@ -13,11 +14,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService {
-    private final EmployeeRepository repository;
+public class UserServiceImpl implements UserService {
+    private final UserRepository repository;
     @Autowired
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
-        this.repository = employeeRepository;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.repository = userRepository;
     }
 
 
@@ -31,8 +32,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (email.length() > 0 &&
                 matcher.matches()) {
 
-            Optional<Employee> optionalEmployee = repository.findEmployeeByEmail(email);
-            if (optionalEmployee.isPresent()) {
+            Optional<User> optionalUser = repository.findUserByEmail(email);
+            if (optionalUser.isPresent()) {
                 throw new IllegalStateException("Email already taken");
             }
 
@@ -63,60 +64,60 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
-    public List<Employee> getEmployees() {
+    public List<User> getUsers() {
         return repository.findAll();
     }
 
     @Override
-    public Employee addEmployee(Employee employee) {
-        if (CorrectEmail(employee.getEmail()) && CorrectName(employee.getName()) && CorrectPassword(employee.getPassword()))
-            return repository.save(employee);
+    public User addUser(User user) {
+        if (CorrectEmail(user.getEmail()) && CorrectName(user.getName()) && CorrectPassword(user.getPassword()))
+            return repository.save(user);
         else
-            throw new IllegalStateException("Cannot create employee");
+            throw new IllegalStateException("Cannot create user");
     }
 
     @Override
-    public String deleteEmployee(Long id) {
+    public String deleteUser(Long id) {
 
         if (!repository.existsById(id)) {
-            throw new IllegalStateException("Employee with id " + id + " does not exist");
+            throw new IllegalStateException("User with id " + id + " does not exist");
         }
 
         repository.deleteById(id);
-        return "Employee account with id " + id + " was deleted";
+        return "User account with id " + id + " was deleted";
     }
 
     @Transactional
-    public String updateEmployee(Long id, String email, String name, String password) {
-        Employee employee = repository.findById(id).orElse(null);
+    public String updateUser(Long id, String email, String name, String password) {
+        User user = repository.findById(id).orElse(null);
 
-        if(employee == null) {
-            Employee newEmployee = new Employee(email, name, password);
+        if(user == null) {
+            User newUser = new User(email, name, password);
 
-            addEmployee(newEmployee);
-            return "Employee created";
+            addUser(newUser);
+            return "User created";
         }
 
         String result = "";
 
         if (CorrectEmail(email) &&
-                !Objects.equals(employee.getEmail(), email)) {
+                !Objects.equals(user.getEmail(), email)) {
 
-            employee.setEmail(email);
+            user.setEmail(email);
             result += "Email changed\n";
         }
 
         if (CorrectName(name) &&
-                !Objects.equals(employee.getName(), name)) {
+                !Objects.equals(user.getName(), name)) {
 
-            employee.setName(name);
+            user.setName(name);
             result += "Name changed\n";
         }
 
         if (CorrectPassword(password) &&
-                !Objects.equals(employee.getPassword(), password)){
+                !Objects.equals(user.getPassword(), password)){
 
-            employee.setPassword(password);
+            user.setPassword(password);
             result += "Password changed\n";
         }
 
@@ -127,36 +128,36 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Transactional
-    public String patchEmployee(Long id, String email, String name, String password) {
-        Employee employee = repository.findById(id).orElseThrow(
-                () -> new IllegalStateException("Employee with id " + id + " does not exist")
+    public String patchUser(Long id, String email, String name, String password) {
+        User user = repository.findById(id).orElseThrow(
+                () -> new IllegalStateException("User with id " + id + " does not exist")
         );
 
         String result = "";
 
         if (email != null) {
             if (CorrectEmail(email) &&
-                    !Objects.equals(employee.getEmail(), email)) {
+                    !Objects.equals(user.getEmail(), email)) {
 
-                employee.setEmail(email);
+                user.setEmail(email);
                 result += "Email changed\n";
             }
         }
 
         if (name != null) {
             if (CorrectName(name) &&
-                    !Objects.equals(employee.getName(), name)) {
+                    !Objects.equals(user.getName(), name)) {
 
-                employee.setName(name);
+                user.setName(name);
                 result += "Name changed\n";
             }
         }
 
         if (password != null) {
             if (CorrectPassword(password) &&
-                    !Objects.equals(employee.getPassword(), password)){
+                    !Objects.equals(user.getPassword(), password)){
 
-                employee.setPassword(password);
+                user.setPassword(password);
                 result += "Password changed\n";
             }
         }

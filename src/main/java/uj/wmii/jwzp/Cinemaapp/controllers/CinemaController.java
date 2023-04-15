@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
-import uj.wmii.jwzp.Cinemaapp.services.CinemaService;
+import uj.wmii.jwzp.Cinemaapp.services.interfaces.CinemaService;
 
 import java.util.List;
 

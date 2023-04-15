@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.List;
 
 @Entity
+@Table(name = "screenings")
 public class Screening {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -12,7 +13,7 @@ public class Screening {
     @Column(nullable = false)
     private String name;
     @OneToOne
-    @Column(nullable = false)
+    @PrimaryKeyJoinColumn
     private CinemaHall hall;
     @Column(nullable = false)
     @ManyToMany
