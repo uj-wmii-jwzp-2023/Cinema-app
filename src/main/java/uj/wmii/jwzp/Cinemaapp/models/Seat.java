@@ -16,6 +16,10 @@ public class Seat {
         this.availability = Availability.FREE;
     }
 
+    public Seat(Availability availability) {
+        this.availability = availability;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
