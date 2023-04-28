@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.0.5"
+	id("org.springframework.boot") version "2.5.9"
 	id("io.spring.dependency-management") version "1.1.0"
 }
 
@@ -15,9 +15,12 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	testImplementation("junit:junit:4.13.1")
-	testImplementation("junit:junit:4.13.1")
-	testImplementation("junit:junit:4.13.1")
+
+	implementation("io.springfox:springfox-boot-starter:3.0.0")
+	implementation("io.springfox:springfox-swagger-ui:3.0.0")
+	implementation("javax.servlet:javax.servlet-api:4.0.1")
+
+	testImplementation("junit:junit:4.13.2")
 	runtimeOnly("org.postgresql:postgresql:42.5.4")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

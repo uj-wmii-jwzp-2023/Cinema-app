@@ -1,6 +1,6 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
 

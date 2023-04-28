@@ -1,7 +1,6 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
-import jakarta.persistence.*;
-
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
