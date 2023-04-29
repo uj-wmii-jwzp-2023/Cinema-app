@@ -11,6 +11,7 @@ import uj.wmii.jwzp.Cinemaapp.services.interfaces.ScreeningService;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ScreeningServiceImpl implements ScreeningService {
@@ -19,6 +20,13 @@ public class ScreeningServiceImpl implements ScreeningService {
     public ScreeningServiceImpl(ScreeningRepository screeningRepository) {
         this.repository = screeningRepository;
     }
+
+
+    public Screening getScreeningById(Long id) {
+        Optional<Screening> screeningOptional = repository.findById(id);
+        return screeningOptional.orElse(null);
+    }
+
     @Override
     public List<Screening> getScreenings() {
         return repository.findAll();
@@ -31,9 +39,6 @@ public class ScreeningServiceImpl implements ScreeningService {
 
     @Override
     public String deleteScreening(Long id) {
-        if(!repository.existsById(id)) {
-            throw new IllegalStateException("Screening with id " + id + " does not exist");
-        }
 
         repository.deleteById(id);
         return "Screening with id " + id + " was deleted";
@@ -84,9 +89,7 @@ public class ScreeningServiceImpl implements ScreeningService {
 
     @Transactional
     public String patchScreening(Long id, String name, CinemaHall hall, List<Movie> movies, Instant startTime, Instant endTime) {
-        Screening screening = repository.findById(id).orElseThrow(
-                () -> new IllegalStateException("Screening with id " + id + " does not exist")
-        );
+        Screening screening = getScreeningById(id);
 
         String result = "";
 

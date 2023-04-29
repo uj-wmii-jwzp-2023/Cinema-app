@@ -64,6 +64,11 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    public User getUserById(Long id) {
+        Optional<User> userOptional = repository.findById(id);
+        return userOptional.orElse(null);
+    }
+
     public List<User> getUsers() {
         return repository.findAll();
     }
@@ -78,10 +83,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String deleteUser(Long id) {
-
-        if (!repository.existsById(id)) {
-            throw new IllegalStateException("User with id " + id + " does not exist");
-        }
 
         repository.deleteById(id);
         return "User account with id " + id + " was deleted";
@@ -129,9 +130,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public String patchUser(Long id, String email, String name, String password) {
-        User user = repository.findById(id).orElseThrow(
-                () -> new IllegalStateException("User with id " + id + " does not exist")
-        );
+        User user = getUserById(id);
 
         String result = "";
 

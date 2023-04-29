@@ -173,6 +173,7 @@ public class CinemaServiceImplTests {
 
     @Test
     void patchNonExistingCinemaShouldThrowException() {
+        List<CinemaHall> cinemaHalls = new LinkedList<>();
         Long id = 123456L;
         String name = "Sniezka";
         String address = "dfgdjngdf";
@@ -180,7 +181,7 @@ public class CinemaServiceImplTests {
         when(cinemaRepository.findById(id)).thenReturn(Optional.empty());
         cinemaService = new CinemaServiceImpl(cinemaRepository);
 
-        Assertions.assertThrows(IllegalStateException.class, () -> cinemaService.patchCinema(id, name, address));
+        Assertions.assertThrows(IllegalStateException.class, () -> cinemaService.patchCinema(id, name, address, cinemaHalls));
     }
 
     @Test
@@ -196,7 +197,7 @@ public class CinemaServiceImplTests {
         when(cinemaRepository.findById(id)).thenReturn(Optional.of(cinema));
         cinemaService = new CinemaServiceImpl(cinemaRepository);
 
-        assertEquals(cinemaService.patchCinema(id, newName, address), output);
+        assertEquals(cinemaService.patchCinema(id, newName, address, cinemaHalls), output);
     }
 
     @Test
@@ -212,7 +213,7 @@ public class CinemaServiceImplTests {
         when(cinemaRepository.findById(id)).thenReturn(Optional.of(cinema));
         cinemaService = new CinemaServiceImpl(cinemaRepository);
 
-        assertEquals(cinemaService.patchCinema(id, name, newAddress), output);
+        assertEquals(cinemaService.patchCinema(id, name, newAddress, cinemaHalls), output);
     }
 
     @Test
@@ -230,6 +231,6 @@ public class CinemaServiceImplTests {
         when(cinemaRepository.findById(id)).thenReturn(Optional.of(cinema));
         cinemaService = new CinemaServiceImpl(cinemaRepository);
 
-        assertEquals(cinemaService.patchCinema(id, newName, newAddress), output);
+        assertEquals(cinemaService.patchCinema(id, newName, newAddress, cinemaHalls), output);
     }
 }

@@ -1,6 +1,8 @@
 package uj.wmii.jwzp.Cinemaapp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uj.wmii.jwzp.Cinemaapp.models.Movie;
 import uj.wmii.jwzp.Cinemaapp.models.Screening;
@@ -19,38 +21,65 @@ public class MovieController {
         service = movieService;
     }
 
+
+    @GetMapping("/{movieId}")
+    public ResponseEntity<Movie> getMovieById(@PathVariable("movieId") Long id) {
+        Movie movie = service.getMovieById(id);
+
+        if(movie == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(movie, HttpStatus.OK);
+    }
+
     @GetMapping
-    public List<Movie> getMovies() {
-        return service.getMovies();
+    public ResponseEntity<List<Movie>> getMovies() {
+        return new ResponseEntity<>(
+                service.getMovies(), HttpStatus.OK
+        );
     }
 
     @PostMapping
-    public Movie addMovie(@RequestBody Movie movie) {
-        return service.addMovie(movie);
+    public ResponseEntity<Movie> addMovie(@RequestBody Movie movie) {
+        return new ResponseEntity<>(
+                service.addMovie(movie), HttpStatus.OK
+        );
     }
 
     @DeleteMapping("{movieId}")
-    public String deleteMovie(@PathVariable("movieId") Long id) {
-        return service.deleteMovie(id);
+    public ResponseEntity<String> deleteMovie(@PathVariable("movieId") Long id) {
+        Movie movie = service.getMovieById(id);
+
+        if(movie == null)
+            return new ResponseEntity<>("Movie with id " + id + " does not exist", HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(service.deleteMovie(id), HttpStatus.OK);
     }
 
     @PutMapping("{movieId}")
-    public String updateMovie(@PathVariable("movieId") Long id,
+    public ResponseEntity<String> updateMovie(@PathVariable("movieId") Long id,
                               @RequestParam String name,
                               @RequestParam Duration duration,
                               @RequestParam String description,
                               @RequestParam String directors,
                               @RequestParam List<Screening> screenings) {
-        return service.updateMovie(id, name, duration, description, directors, screenings);
+
+        return new ResponseEntity<>(service.updateMovie(id, name, duration, description, directors, screenings), HttpStatus.OK);
     }
 
     @PatchMapping("{movieId}")
-    public String patchMovie(@PathVariable("movieId") Long id,
+    public ResponseEntity<String> patchMovie(@PathVariable("movieId") Long id,
                              @RequestParam(required = false) String name,
                              @RequestParam(required = false) Duration duration,
                              @RequestParam(required = false) String description,
                              @RequestParam(required = false) String directors,
                              @RequestParam(required = false) List<Screening> screenings) {
-        return service.patchMovie(id, name, duration, description, directors, screenings);
+        
+        Movie movie = service.getMovieById(id);
+
+        if(movie == null)
+            return new ResponseEntity<>("Movie with id " + id + " does not exist", HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(service.patchMovie(id, name, duration, description, directors, screenings), HttpStatus.OK);
     }
 }

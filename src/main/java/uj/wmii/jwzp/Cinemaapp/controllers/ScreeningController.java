@@ -1,6 +1,8 @@
 package uj.wmii.jwzp.Cinemaapp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.models.Movie;
@@ -20,38 +22,65 @@ public class ScreeningController {
         service = screeningService;
     }
 
+
+    @GetMapping("/{screeningId}")
+    public ResponseEntity<Screening> getScreeningById(@PathVariable("screeningId") Long id) {
+        Screening screening = service.getScreeningById(id);
+
+        if(screening == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(screening, HttpStatus.OK);
+    }
+
     @GetMapping
-    public List<Screening> getScreenings() {
-        return service.getScreenings();
+    public ResponseEntity<List<Screening>> getScreenings() {
+        return new ResponseEntity<>(
+                service.getScreenings(), HttpStatus.OK
+        );
     }
 
     @PostMapping
-    public Screening addScreening(@RequestBody Screening screening) {
-        return service.addScreening(screening);
+    public ResponseEntity<Screening> addScreening(@RequestBody Screening screening) {
+        return new ResponseEntity<>(
+                service.addScreening(screening), HttpStatus.OK
+        );
     }
 
     @DeleteMapping("{screeningId}")
-    public String deleteScreening(@PathVariable("screeningId") Long id) {
-        return service.deleteScreening(id);
+    public ResponseEntity<String> deleteScreening(@PathVariable("screeningId") Long id) {
+        Screening screening = service.getScreeningById(id);
+
+        if(screening == null)
+            return new ResponseEntity<>("Screening with id " + id + " does not exist", HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(service.deleteScreening(id), HttpStatus.OK);
     }
 
     @PutMapping("{screeningId}")
-    public String updateScreening(@PathVariable("screeningId") Long id,
+    public ResponseEntity<String> updateScreening(@PathVariable("screeningId") Long id,
                               @RequestParam String name,
                               @RequestParam CinemaHall hall,
                               @RequestParam List<Movie> movies,
                               @RequestParam Instant startTime,
                               @RequestParam Instant endTime) {
-        return service.updateScreening(id, name, hall, movies, startTime, endTime);
+        
+        return new ResponseEntity<>(service.updateScreening(id, name, hall, movies, startTime, endTime), HttpStatus.OK);
     }
 
     @PatchMapping("{screeningId}")
-    public String patchScreening(@PathVariable("screeningId") Long id,
+    public ResponseEntity<String> patchScreening(@PathVariable("screeningId") Long id,
                              @RequestParam(required = false) String name,
                              @RequestParam(required = false) CinemaHall hall,
                              @RequestParam(required = false) List<Movie> movies,
                              @RequestParam(required = false) Instant startTime,
                              @RequestParam(required = false) Instant endTime) {
-        return service.patchScreening(id, name, hall, movies, startTime, endTime);
+
+        Screening screening = service.getScreeningById(id);
+
+        if(screening == null)
+            return new ResponseEntity<>("Screening with id " + id + " does not exist", HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(service.patchScreening(id, name, hall, movies, startTime, endTime), HttpStatus.OK);
     }
 }

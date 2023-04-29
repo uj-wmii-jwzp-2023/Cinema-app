@@ -64,6 +64,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
+    public Employee getEmployeeById(Long id) {
+        Optional<Employee> employeeOptional = repository.findById(id);
+        return employeeOptional.orElse(null);
+    }
+
     public List<Employee> getEmployees() {
         return repository.findAll();
     }
@@ -78,10 +83,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public String deleteEmployee(Long id) {
-
-        if (!repository.existsById(id)) {
-            throw new IllegalStateException("Employee with id " + id + " does not exist");
-        }
 
         repository.deleteById(id);
         return "Employee account with id " + id + " was deleted";
@@ -129,9 +130,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     public String patchEmployee(Long id, String email, String name, String password) {
-        Employee employee = repository.findById(id).orElseThrow(
-                () -> new IllegalStateException("Employee with id " + id + " does not exist")
-        );
+        Employee employee = getEmployeeById(id);
 
         String result = "";
 

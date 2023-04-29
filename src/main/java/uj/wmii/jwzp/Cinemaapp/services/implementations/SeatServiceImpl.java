@@ -9,6 +9,7 @@ import uj.wmii.jwzp.Cinemaapp.repositories.SeatRepository;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.SeatService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SeatServiceImpl implements SeatService {
@@ -17,6 +18,13 @@ public class SeatServiceImpl implements SeatService {
     public SeatServiceImpl(SeatRepository seatRepository) {
         this.repository = seatRepository;
     }
+
+
+    public Seat getSeatById(Long id) {
+        Optional<Seat> seatOptional = repository.findById(id);
+        return seatOptional.orElse(null);
+    }
+
     @Override
     public List<Seat> getSeats() {
         return repository.findAll();

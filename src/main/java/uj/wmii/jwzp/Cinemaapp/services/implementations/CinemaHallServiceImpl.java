@@ -9,6 +9,7 @@ import uj.wmii.jwzp.Cinemaapp.repositories.CinemaHallRepository;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.CinemaHallService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CinemaHallServiceImpl implements CinemaHallService {
@@ -16,6 +17,13 @@ public class CinemaHallServiceImpl implements CinemaHallService {
     @Autowired
     public CinemaHallServiceImpl(CinemaHallRepository cinemaHallRepository) {
         this.repository = cinemaHallRepository;
+    }
+
+
+    @Override
+    public CinemaHall getCinemaHallById(Long id) {
+        Optional<CinemaHall> cinemaOptional = repository.findById(id);
+        return cinemaOptional.orElse(null);
     }
 
     @Override
@@ -30,11 +38,8 @@ public class CinemaHallServiceImpl implements CinemaHallService {
 
     @Override
     public String deleteCinemaHall(Long id) {
-        if(!repository.existsById(id)) {
-            throw new IllegalStateException("CinemaHall with id " + id + " does not exist");
-        }
-
         repository.deleteById(id);
+
         return "CinemaHall with id " + id + " was deleted";
     }
 
@@ -68,9 +73,7 @@ public class CinemaHallServiceImpl implements CinemaHallService {
 
     @Override
     public String patchCinemaHall(Long id, Cinema cinema, List<Seat> seats) {
-        CinemaHall cinemaHall = repository.findById(id).orElseThrow(
-                () -> new IllegalStateException("CinemaHall with id " + id + " does not exist")
-        );
+        CinemaHall cinemaHall = getCinemaHallById(id);
 
         String result = "";
 

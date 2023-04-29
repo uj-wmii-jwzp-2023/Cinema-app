@@ -6,6 +6,9 @@ import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import java.util.List;
 
 public interface CinemaService {
+
+    Cinema getCinemaById(Long id);
+
     List<Cinema> getCinemas();
 
     Cinema addCinema(Cinema cinema);
@@ -14,5 +17,5 @@ public interface CinemaService {
 
     String updateCinema(Long id, String name, String address, List<CinemaHall> cinemaHalls);
 
-    String patchCinema(Long id, String name, String address);
+    String patchCinema(Long id, String name, String address, List<CinemaHall> cinemaHalls);
 }

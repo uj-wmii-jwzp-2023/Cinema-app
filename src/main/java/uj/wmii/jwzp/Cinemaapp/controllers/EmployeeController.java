@@ -1,6 +1,8 @@
 package uj.wmii.jwzp.Cinemaapp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uj.wmii.jwzp.Cinemaapp.models.Employee;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.EmployeeService;
@@ -17,34 +19,61 @@ public class EmployeeController {
         service = employeeService;
     }
 
+
+    @GetMapping("/{employeeId}")
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable("employeeId") Long id) {
+        Employee employee = service.getEmployeeById(id);
+
+        if(employee == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(employee, HttpStatus.OK);
+    }
+    
     @GetMapping
-    public List<Employee> getEmployees() {
-        return service.getEmployees();
+    public ResponseEntity<List<Employee>> getEmployees() {
+        return new ResponseEntity<>(
+                service.getEmployees(), HttpStatus.OK
+        );
     }
 
     @PostMapping
-    public Employee addEmployee(@RequestBody Employee employee) {
-        return service.addEmployee(employee);
+    public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
+        return new ResponseEntity<>(
+                service.addEmployee(employee), HttpStatus.OK
+        );
     }
 
     @DeleteMapping("{employeeId}")
-    public String deleteEmployee(@PathVariable("employeeId") Long id) {
-        return service.deleteEmployee(id);
+    public ResponseEntity<String> deleteEmployee(@PathVariable("employeeId") Long id) {
+        Employee employee = service.getEmployeeById(id);
+
+        if(employee == null)
+            return new ResponseEntity<>("Employee with id " + id + " does not exist", HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(service.deleteEmployee(id), HttpStatus.OK);
     }
 
     @PutMapping("{employeeId}")
-    public String updateEmployee(@PathVariable("employeeId") Long id,
+    public ResponseEntity<String> updateEmployee(@PathVariable("employeeId") Long id,
                              @RequestParam String email,
                              @RequestParam String name,
                              @RequestParam String password) {
-        return service.updateEmployee(id, email, name, password);
+        
+        return new ResponseEntity<>(service.updateEmployee(id, email, name, password), HttpStatus.OK);
     }
 
     @PatchMapping("{employeeId}")
-    public String patchEmployee(@PathVariable("employeeId") Long id,
+    public ResponseEntity<String> patchEmployee(@PathVariable("employeeId") Long id,
                             @RequestParam(required = false) String email,
                             @RequestParam(required = false) String name,
                             @RequestParam(required = false) String password) {
-        return service.patchEmployee(id, email, name, password);
+
+        Employee employee = service.getEmployeeById(id);
+
+        if(employee == null)
+            return new ResponseEntity<>("Employee with id " + id + " does not exist", HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(service.patchEmployee(id, email, name, password), HttpStatus.OK);
     }
 }

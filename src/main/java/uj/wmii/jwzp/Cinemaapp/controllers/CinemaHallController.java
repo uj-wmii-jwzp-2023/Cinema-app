@@ -1,6 +1,8 @@
 package uj.wmii.jwzp.Cinemaapp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
@@ -19,32 +21,58 @@ public class CinemaHallController {
         service = cinemaService;
     }
 
+
+    @GetMapping("/{cinemaHallId}")
+    public ResponseEntity<CinemaHall> getCinemaHallById(@PathVariable("cinemaHallId") Long id) {
+        CinemaHall cinemaHall = service.getCinemaHallById(id);
+
+        if(cinemaHall == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(cinemaHall, HttpStatus.OK);
+    }
+
     @GetMapping
-    public List<CinemaHall> getCinemaHalls() {
-        return service.getCinemaHalls();
+    public ResponseEntity<List<CinemaHall>> getCinemaHalls() {
+        return new ResponseEntity<>(
+                service.getCinemaHalls(), HttpStatus.OK
+        );
     }
 
     @PostMapping
-    public CinemaHall addCinemaHall(@RequestBody CinemaHall cinema) {
-        return service.addCinemaHall(cinema);
+    public ResponseEntity<CinemaHall> addCinemaHall(@RequestBody CinemaHall cinemaHall) {
+        return new ResponseEntity<>(
+                service.addCinemaHall(cinemaHall), HttpStatus.OK
+        );
     }
 
-    @DeleteMapping("{cinemaId}")
-    public String deleteCinemaHall(@PathVariable("cinemaId") Long id) {
-        return service.deleteCinemaHall(id);
+    @DeleteMapping("{cinemaHallId}")
+    public ResponseEntity<String> deleteCinemaHall(@PathVariable("cinemaHallId") Long id) {
+        CinemaHall cinemaHall = service.getCinemaHallById(id);
+
+        if(cinemaHall == null)
+            return new ResponseEntity<>("Cinema hall with id " + id + " does not exist", HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(service.deleteCinemaHall(id), HttpStatus.OK);
     }
 
-    @PutMapping("{cinemaId}")
-    public String updateCinemaHall(@PathVariable("cinemaId") Long id,
+    @PutMapping("{cinemaHallId}")
+    public ResponseEntity<String> updateCinemaHall(@PathVariable("cinemaHallId") Long id,
                                @RequestParam Cinema cinema,
                                @RequestParam List<Seat> seats) {
-        return service.updateCinemaHall(id, cinema, seats);
+
+        return new ResponseEntity<>(service.updateCinemaHall(id, cinema, seats), HttpStatus.OK);
     }
 
-    @PatchMapping("{cinemaId}")
-    public String patchCinemaHall(@PathVariable("cinemaId") Long id,
+    @PatchMapping("{cinemaHallId}")
+    public ResponseEntity<String> patchCinemaHall(@PathVariable("cinemaHallId") Long id,
                                   @RequestParam(required = false) Cinema cinema,
                                   @RequestParam(required = false) List<Seat> seats) {
-        return service.patchCinemaHall(id, cinema, seats);
+        CinemaHall cinemaHall = service.getCinemaHallById(id);
+
+        if(cinemaHall == null)
+            return new ResponseEntity<>("Cinema hall with id " + id + " does not exist", HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(service.patchCinemaHall(id, cinema, seats), HttpStatus.OK);
     }
 }

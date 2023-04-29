@@ -10,6 +10,7 @@ import uj.wmii.jwzp.Cinemaapp.services.interfaces.CinemaService;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CinemaServiceImpl implements CinemaService {
@@ -18,6 +19,13 @@ public class CinemaServiceImpl implements CinemaService {
     @Autowired
     public CinemaServiceImpl(CinemaRepository repository) {
         this.repository = repository;
+    }
+
+
+    @Override
+    public Cinema getCinemaById(Long id) {
+        Optional<Cinema> cinemaOptional = repository.findById(id);
+        return cinemaOptional.orElse(null);
     }
 
     boolean CorrectName(String name) {
@@ -55,9 +63,6 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Override
     public String deleteCinema(Long id) {
-        if(!repository.existsById(id)) {
-            throw new IllegalStateException("Cinema with id " + id + " does not exist");
-        }
 
         repository.deleteById(id);
         return "Cinema with id " + id + " was deleted";
@@ -85,6 +90,11 @@ public class CinemaServiceImpl implements CinemaService {
             result += "Address changed\n";
         }
 
+        if(!cinemaHalls.equals(cinema.getCinemaHalls())) {
+            cinema.setCinemaHalls(cinemaHalls);
+            result += "Cinema halls changed\n";
+        }
+
         if(result.length() == 0) {
             return "Nothing changed";
         } else
@@ -92,10 +102,8 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Transactional
-    public String patchCinema(Long id, String name, String address) {
-        Cinema cinema = repository.findById(id).orElseThrow(
-                () -> new IllegalStateException("Cinema with id " + id + " does not exist")
-        );
+    public String patchCinema(Long id, String name, String address, List<CinemaHall> cinemaHalls) {
+        Cinema cinema = getCinemaById(id);
 
         String result = "";
 
@@ -107,6 +115,11 @@ public class CinemaServiceImpl implements CinemaService {
         if(address != null && !address.equals(cinema.getAddress())) {
             cinema.setAddress(address);
             result += "Address changed\n";
+        }
+
+        if(!cinemaHalls.equals(cinema.getCinemaHalls())) {
+            cinema.setCinemaHalls(cinemaHalls);
+            result += "Cinema halls changed\n";
         }
 
         if(result.length() == 0) {

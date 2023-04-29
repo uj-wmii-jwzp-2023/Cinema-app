@@ -5,6 +5,9 @@ import uj.wmii.jwzp.Cinemaapp.models.User;
 import java.util.List;
 
 public interface UserService {
+
+    User getUserById(Long id);
+
     List<User> getUsers();
 
     User addUser(User user);

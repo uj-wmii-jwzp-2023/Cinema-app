@@ -8,6 +8,9 @@ import java.time.Instant;
 import java.util.List;
 
 public interface ScreeningService {
+
+    Screening getScreeningById(Long id);
+
     List<Screening> getScreenings();
 
     Screening addScreening(Screening screening);

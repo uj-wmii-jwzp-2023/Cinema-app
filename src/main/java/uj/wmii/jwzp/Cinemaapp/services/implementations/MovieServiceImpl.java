@@ -10,6 +10,7 @@ import uj.wmii.jwzp.Cinemaapp.services.interfaces.MovieService;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -18,6 +19,13 @@ public class MovieServiceImpl implements MovieService {
     public MovieServiceImpl(MovieRepository movieRepository) {
         this.repository = movieRepository;
     }
+
+
+    public Movie getMovieById(Long id) {
+        Optional<Movie> movieOptional = repository.findById(id);
+        return movieOptional.orElse(null);
+    }
+
     @Override
     public List<Movie> getMovies() {
         return repository.findAll();
@@ -30,9 +38,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public String deleteMovie(Long id) {
-        if(!repository.existsById(id)) {
-            throw new IllegalStateException("Movie with id " + id + " does not exist");
-        }
 
         repository.deleteById(id);
         return "Movie with id " + id + " was deleted";
@@ -83,9 +88,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Transactional
     public String patchMovie(Long id, String name, Duration duration, String description, String directors, List<Screening> screenings) {
-        Movie movie = repository.findById(id).orElseThrow(
-                () -> new IllegalStateException("Movie with id " + id + " does not exist")
-        );
+        Movie movie = getMovieById(id);
 
         String result = "";
 

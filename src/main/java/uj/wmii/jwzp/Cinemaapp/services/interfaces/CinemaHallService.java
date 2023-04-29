@@ -7,6 +7,9 @@ import uj.wmii.jwzp.Cinemaapp.models.Seat;
 import java.util.List;
 
 public interface CinemaHallService {
+
+    CinemaHall getCinemaHallById(Long id);
+
     List<CinemaHall> getCinemaHalls();
 
     CinemaHall addCinemaHall(CinemaHall cinemaHall);

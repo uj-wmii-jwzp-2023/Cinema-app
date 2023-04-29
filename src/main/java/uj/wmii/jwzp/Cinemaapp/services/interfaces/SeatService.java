@@ -6,6 +6,9 @@ import uj.wmii.jwzp.Cinemaapp.models.Seat;
 import java.util.List;
 
 public interface SeatService {
+
+    Seat getSeatById(Long id);
+
     List<Seat> getSeats();
 
     Seat addSeat(Seat seat);

@@ -7,6 +7,9 @@ import java.time.Duration;
 import java.util.List;
 
 public interface MovieService {
+
+    Movie getMovieById(Long id);
+
     List<Movie> getMovies();
 
     Movie addMovie(Movie movie);
