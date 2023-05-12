@@ -24,3 +24,10 @@
 ### Film:
 - sprawdzenie kiedy dany film będzie wyświetlany w danym kinie
 - wyświetlenie szczegółów dotyczących filmu
+
+## TODO:
+- Autoryzacja i autentykacja
+- Weryfikacja wprowadzonych danych przez pracowników(dot. seansów, czy np. nie kolidują z innym seansem)
+- System wyszukiwania filmów w danym kinie
+- Przedstawianie miejsc na dany seans + mozliwosc rezerwowania miejsc
+- Przy kupnie następuje subskrybcja wydarzenia
