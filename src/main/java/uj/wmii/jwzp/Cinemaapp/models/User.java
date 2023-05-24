@@ -2,10 +2,12 @@ package uj.wmii.jwzp.Cinemaapp.models;
 
 import javax.persistence.*;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -17,12 +19,26 @@ public class User{
     @Column(nullable = false)
     private String password;
 
-    public User() {}
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+
+    private Collection<Role> roles;
+
+
+    public User() {
+        this.roles = List.of(new Role("NORMAL_USER"));
+    }
 
     public User(String email, String name, String password) {
         this.email = email;
         this.name = name;
         this.password = password;
+        this.roles = List.of(new Role("NORMAL_USER"));
     }
 
     public Long getId() {
@@ -51,6 +67,14 @@ public class User{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
