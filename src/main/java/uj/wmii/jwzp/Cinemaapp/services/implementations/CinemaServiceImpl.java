@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
+import uj.wmii.jwzp.Cinemaapp.models.Movie;
 import uj.wmii.jwzp.Cinemaapp.repositories.CinemaRepository;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.CinemaService;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CinemaServiceImpl implements CinemaService {
@@ -126,5 +128,17 @@ public class CinemaServiceImpl implements CinemaService {
             return "Nothing changed";
         } else
             return result;
+    }
+
+    @Transactional
+    public List<Movie> getMovies(Long id) {
+
+
+        return getCinemaById(id).getCinemaHalls()
+                .stream()
+                .flatMap(cinemaHall -> cinemaHall.getScreenings().stream())
+                .flatMap(screening -> screening.getMovies().stream())
+                .distinct()
+                .collect(Collectors.toList());
     }
 }

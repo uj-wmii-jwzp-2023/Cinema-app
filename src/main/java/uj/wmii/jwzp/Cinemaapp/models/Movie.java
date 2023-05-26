@@ -67,29 +67,6 @@ public class Movie {
         this.directors = directors;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Movie movie = (Movie) o;
-        return name.equals(movie.name) && description.equals(movie.description) && directors.equals(movie.directors);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, description, directors);
-    }
-
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", directors='" + directors + '\'' +
-                '}';
-    }
-
     public Duration getDuration() {
         return duration;
     }
@@ -104,5 +81,30 @@ public class Movie {
 
     public void setScreenings(List<Screening> screenings) {
         this.screenings = screenings;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Movie movie = (Movie) o;
+        return Objects.equals(name, movie.name) && Objects.equals(duration, movie.duration) && Objects.equals(description, movie.description) && Objects.equals(directors, movie.directors) && Objects.equals(screenings, movie.screenings);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, duration, description, directors, screenings);
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", duration=" + duration +
+                ", description='" + description + '\'' +
+                ", directors='" + directors + '\'' +
+                ", screenings=" + screenings +
+                '}';
     }
 }

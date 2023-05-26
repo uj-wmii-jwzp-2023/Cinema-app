@@ -3,6 +3,7 @@ package uj.wmii.jwzp.Cinemaapp.models;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "screenings")
@@ -79,5 +80,30 @@ public class Screening {
 
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Screening screening = (Screening) o;
+        return Objects.equals(name, screening.name) && Objects.equals(hall, screening.hall) && Objects.equals(movies, screening.movies) && Objects.equals(startTime, screening.startTime) && Objects.equals(endTime, screening.endTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, hall, movies, startTime, endTime);
+    }
+
+    @Override
+    public String toString() {
+        return "Screening{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", hall=" + hall +
+                ", movies=" + movies +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
     }
 }

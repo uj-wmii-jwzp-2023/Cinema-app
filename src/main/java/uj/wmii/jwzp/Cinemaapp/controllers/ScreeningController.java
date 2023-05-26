@@ -42,9 +42,8 @@ public class ScreeningController {
 
     @PostMapping
     public ResponseEntity<Screening> addScreening(@RequestBody Screening screening) {
-        return new ResponseEntity<>(
-                service.addScreening(screening), HttpStatus.OK
-        );
+        Screening result = service.addScreening(screening);
+        return result != null ? ResponseEntity.ok(result) : ResponseEntity.status(HttpStatus.CONFLICT).body(null);
     }
 
     @DeleteMapping("{screeningId}")
@@ -64,8 +63,8 @@ public class ScreeningController {
                               @RequestParam List<Movie> movies,
                               @RequestParam Instant startTime,
                               @RequestParam Instant endTime) {
-        
-        return new ResponseEntity<>(service.updateScreening(id, name, hall, movies, startTime, endTime), HttpStatus.OK);
+        var result = service.updateScreening(id, name, hall, movies, startTime, endTime);
+        return result != null ? ResponseEntity.ok(result) : ResponseEntity.status(HttpStatus.CONFLICT).body(null);
     }
 
     @PatchMapping("{screeningId}")
@@ -81,6 +80,7 @@ public class ScreeningController {
         if(screening == null)
             return new ResponseEntity<>("Screening with id " + id + " does not exist", HttpStatus.NOT_FOUND);
 
-        return new ResponseEntity<>(service.patchScreening(id, name, hall, movies, startTime, endTime), HttpStatus.OK);
+        var result = service.patchScreening(id, name, hall, movies, startTime, endTime);
+        return result != null ? ResponseEntity.ok(result) : ResponseEntity.status(HttpStatus.CONFLICT).body(null);
     }
 }

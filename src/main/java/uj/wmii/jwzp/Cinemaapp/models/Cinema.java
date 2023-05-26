@@ -52,17 +52,25 @@ public class Cinema {
         this.address = address;
     }
 
+    public List<CinemaHall> getCinemaHalls() {
+        return cinemaHalls;
+    }
+
+    public void setCinemaHalls(List<CinemaHall> cinemaHalls) {
+        this.cinemaHalls = cinemaHalls;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cinema cinema = (Cinema) o;
-        return name.equals(cinema.name) && address.equals(cinema.address);
+        return Objects.equals(name, cinema.name) && Objects.equals(address, cinema.address) && Objects.equals(cinemaHalls, cinema.cinemaHalls);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, address);
+        return Objects.hash(name, address, cinemaHalls);
     }
 
     @Override
@@ -71,14 +79,7 @@ public class Cinema {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
+                ", cinemaHalls=" + cinemaHalls +
                 '}';
-    }
-
-    public List<CinemaHall> getCinemaHalls() {
-        return cinemaHalls;
-    }
-
-    public void setCinemaHalls(List<CinemaHall> cinemaHalls) {
-        this.cinemaHalls = cinemaHalls;
     }
 }

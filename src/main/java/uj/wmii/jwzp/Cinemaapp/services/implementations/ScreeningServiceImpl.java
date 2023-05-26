@@ -1,6 +1,5 @@
 package uj.wmii.jwzp.Cinemaapp.services.implementations;
 
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
@@ -9,6 +8,7 @@ import uj.wmii.jwzp.Cinemaapp.models.Screening;
 import uj.wmii.jwzp.Cinemaapp.repositories.ScreeningRepository;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.ScreeningService;
 
+import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +34,9 @@ public class ScreeningServiceImpl implements ScreeningService {
 
     @Override
     public Screening addScreening(Screening screening) {
+        if(checkCollisions(screening.getId(),screening.getHall(),screening.getStartTime(),screening.getEndTime())) {
+            return null;
+        }
         return repository.save(screening);
     }
 
@@ -46,6 +49,9 @@ public class ScreeningServiceImpl implements ScreeningService {
 
     @Transactional
     public String updateScreening(Long id, String name, CinemaHall hall, List<Movie> movies, Instant startTime, Instant endTime) {
+        if(checkCollisions(id,hall,startTime,endTime)) {
+            return null;
+        }
         Screening screening = repository.findById(id).orElse(null);
         if(screening == null) {
             screening = new Screening(name,hall,movies,startTime,endTime);
@@ -89,6 +95,9 @@ public class ScreeningServiceImpl implements ScreeningService {
 
     @Transactional
     public String patchScreening(Long id, String name, CinemaHall hall, List<Movie> movies, Instant startTime, Instant endTime) {
+        if(checkCollisions(id,hall,startTime,endTime)) {
+            return null;
+        }
         Screening screening = getScreeningById(id);
 
         String result = "";
@@ -122,5 +131,18 @@ public class ScreeningServiceImpl implements ScreeningService {
             return "Nothing changed";
         } else
             return result;
+    }
+
+    public boolean checkCollisions(Long id, CinemaHall hall ,Instant startTime, Instant endTime) {
+        var screenings = repository.findAll()
+                .stream().filter(s -> s.getHall().equals(hall))
+                .filter(s -> !s.getId().equals(id))
+                .toList();
+        for(var s : screenings) {
+            if(s.getStartTime().isBefore(endTime) && s.getEndTime().isBefore(startTime)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

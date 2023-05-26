@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
+import uj.wmii.jwzp.Cinemaapp.models.Movie;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.CinemaService;
 
 import java.util.List;
@@ -76,5 +77,10 @@ public class CinemaController {
             return new ResponseEntity<>("Cinema with id " + id + " does not exist", HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(service.patchCinema(id, name, address, cinemaHalls), HttpStatus.OK);
+    }
+
+    @GetMapping("/{cinemaId}/movies")
+    public ResponseEntity<List<Movie>> getMovies(@PathVariable("cinemaId") Long id) {
+        return new ResponseEntity<>(service.getMovies(id), HttpStatus.OK);
     }
 }

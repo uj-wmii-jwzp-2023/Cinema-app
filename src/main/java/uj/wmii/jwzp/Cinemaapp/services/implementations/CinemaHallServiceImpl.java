@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
+import uj.wmii.jwzp.Cinemaapp.models.Screening;
 import uj.wmii.jwzp.Cinemaapp.models.Seat;
 import uj.wmii.jwzp.Cinemaapp.repositories.CinemaHallRepository;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.CinemaHallService;
@@ -44,10 +45,10 @@ public class CinemaHallServiceImpl implements CinemaHallService {
     }
 
     @Override
-    public String updateCinemaHall(Long id, Cinema cinema, List<Seat> seats) {
+    public String updateCinemaHall(Long id, Cinema cinema, List<Screening> screenings, List<Seat> seats) {
         CinemaHall cinemaHall = repository.findById(id).orElse(null);
         if(cinemaHall == null) {
-            cinemaHall = new CinemaHall(cinema,seats);
+            cinemaHall = new CinemaHall(cinema,screenings,seats);
 
             addCinemaHall(cinemaHall);
             return "CinemaHall created";
@@ -58,6 +59,11 @@ public class CinemaHallServiceImpl implements CinemaHallService {
         if(!cinema.equals(cinemaHall.getCinema())) {
             cinemaHall.setCinema(cinema);
             result += "Cinema changed\n";
+        }
+
+        if(!screenings.equals(cinemaHall.getScreenings())) {
+            cinemaHall.setScreenings(screenings);
+            result += "Screenings changed\n";
         }
 
         if(!seats.equals(cinemaHall.getSeats())) {
@@ -72,7 +78,7 @@ public class CinemaHallServiceImpl implements CinemaHallService {
     }
 
     @Override
-    public String patchCinemaHall(Long id, Cinema cinema, List<Seat> seats) {
+    public String patchCinemaHall(Long id, Cinema cinema, List<Screening> screenings, List<Seat> seats) {
         CinemaHall cinemaHall = getCinemaHallById(id);
 
         String result = "";
@@ -80,6 +86,11 @@ public class CinemaHallServiceImpl implements CinemaHallService {
         if(!cinema.equals(cinemaHall.getCinema())) {
             cinemaHall.setCinema(cinema);
             result += "Cinema changed\n";
+        }
+
+        if(!screenings.equals(cinemaHall.getScreenings())) {
+            cinemaHall.setScreenings(screenings);
+            result += "Screenings changed\n";
         }
 
         if(!seats.equals(cinemaHall.getSeats())) {
