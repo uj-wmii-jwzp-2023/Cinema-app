@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import uj.wmii.jwzp.Cinemaapp.models.Role;
 import uj.wmii.jwzp.Cinemaapp.models.User;
@@ -22,11 +24,42 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository repository;
+    private final BCryptPasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.repository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+
+    @Override
+    public User registerUser(UserRegistrationDto userData) {
+        if (CorrectEmail(userData.getEmail()) && CorrectName(userData.getName()) && CorrectPassword(userData.getPassword())) {
+            User user = new User(userData.getEmail(), userData.getName(), passwordEncoder.encode(userData.getPassword()));
+            return repository.save(user);
+        }
+        else
+            throw new IllegalStateException("Cannot create user");
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        if (username.isEmpty())
+            System.out.println("EMPTY_USERNAME");
+        else
+            System.out.println("username: " + username);
+
+        User user = repository.findUserByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+    }
+
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 
 
@@ -71,19 +104,6 @@ public class UserServiceImpl implements UserService {
         throw new IllegalStateException("Invalid password");
     }
 
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        User user = repository.findUserByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
-    }
-
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
-    }
-
     public User getUserById(Long id) {
         Optional<User> userOptional = repository.findById(id);
         return userOptional.orElse(null);
@@ -101,15 +121,15 @@ public class UserServiceImpl implements UserService {
             throw new IllegalStateException("Cannot create user");
     }
 
-    @Override
-    public User registerUser(UserRegistrationDto userData) {
-        if (CorrectEmail(userData.getEmail()) && CorrectName(userData.getName()) && CorrectPassword(userData.getPassword())) {
-            User user = new User(userData.getEmail(), userData.getName(), userData.getPassword());
-            return repository.save(user);
-        }
-        else
-            throw new IllegalStateException("Cannot create user");
-    }
+//    @Override
+//    public User registerUser(UserRegistrationDto userData) {
+//        if (CorrectEmail(userData.getEmail()) && CorrectName(userData.getName()) && CorrectPassword(userData.getPassword())) {
+//            User user = new User(userData.getEmail(), userData.getName(), passwordEncoder.encode(userData.getPassword()));
+//            return repository.save(user);
+//        }
+//        else
+//            throw new IllegalStateException("Cannot create user");
+//    }
 
     @Override
     public String deleteUser(Long id) {
