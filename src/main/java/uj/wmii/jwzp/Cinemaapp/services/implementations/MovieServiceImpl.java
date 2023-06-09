@@ -55,8 +55,8 @@ public class MovieServiceImpl implements MovieService {
 
         String result = "";
 
-        if(!name.equals(movie.getName())) {
-            movie.setName(name);
+        if(!name.equals(movie.getTitle())) {
+            movie.setTitle(name);
             result += "Name changed\n";
         }
 
@@ -92,8 +92,8 @@ public class MovieServiceImpl implements MovieService {
 
         String result = "";
 
-        if(!name.equals(movie.getName())) {
-            movie.setName(name);
+        if(!name.equals(movie.getTitle())) {
+            movie.setTitle(name);
             result += "Name changed\n";
         }
 

@@ -2,6 +2,7 @@ package uj.wmii.jwzp.Cinemaapp.models;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,10 +24,20 @@ public class CinemaHall {
 
     public CinemaHall() { }
 
+    public CinemaHall(Cinema cinema) {
+        this.cinema = cinema;
+        this.screenings = new ArrayList<>();
+        this.seats = new ArrayList<>();
+
+        cinema.addCinemaHall(this);
+    }
+
     public CinemaHall(Cinema cinema,List<Screening> screenings, List<Seat> seats) {
         this.cinema = cinema;
         this.screenings = screenings;
         this.seats = seats;
+
+        cinema.addCinemaHall(this);
     }
 
     public void setId(Long id) {
@@ -59,6 +70,14 @@ public class CinemaHall {
 
     public void setSeats(List<Seat> seats) {
         this.seats = seats;
+    }
+
+    public void addScreening(Screening newScreening) {
+        this.screenings.add(newScreening);
+    }
+
+    public void addSeat(Seat newSeat) {
+        this.seats.add(newSeat);
     }
 
     @Override

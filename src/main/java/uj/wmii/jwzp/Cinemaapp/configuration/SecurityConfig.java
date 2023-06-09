@@ -18,7 +18,8 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/registration").permitAll()
+                .antMatchers("/registration", "/screenings/create").permitAll()
+                .antMatchers("/cinemas/**", "/cinemaHalls/**", "/screenings/**", "/movies/**", "/seats/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/users").permitAll()
                 .anyRequest().authenticated()
                 .and()

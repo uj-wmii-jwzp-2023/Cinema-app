@@ -61,6 +61,15 @@ public class MovieController {
         return new ResponseEntity<>(addedMovie, HttpStatus.OK);
     }
 
+    @PostMapping("/addMovies")
+    public ResponseEntity<Integer> addMovies(@RequestBody List<Movie> movies) {
+        for (Movie movie : movies) {
+            service.addMovie(movie);
+        }
+
+        return new ResponseEntity<>(movies.size(), HttpStatus.OK);
+    }
+
     @DeleteMapping("{movieId}")
     public ResponseEntity<String> deleteMovie(@PathVariable("movieId") Long id) {
         LOGGER.debug("Deleting movie with id: {}", id);

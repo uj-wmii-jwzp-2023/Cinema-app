@@ -1,6 +1,7 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,6 +21,12 @@ public class Cinema {
 
 
     public Cinema() {
+    }
+
+    public Cinema(String name, String address) {
+        this.name = name;
+        this.address = address;
+        this.cinemaHalls = new ArrayList<>();
     }
 
     public Cinema(String name, String address, List<CinemaHall> cinemaHalls) {
@@ -58,6 +65,10 @@ public class Cinema {
 
     public void setCinemaHalls(List<CinemaHall> cinemaHalls) {
         this.cinemaHalls = cinemaHalls;
+    }
+
+    public void addCinemaHall(CinemaHall newCinemaHall) {
+        this.cinemaHalls.add(newCinemaHall);
     }
 
     @Override

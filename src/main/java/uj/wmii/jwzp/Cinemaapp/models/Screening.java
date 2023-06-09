@@ -1,7 +1,9 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,21 +19,30 @@ public class Screening {
     @PrimaryKeyJoinColumn
     private CinemaHall hall;
     @Column(nullable = false)
-    @ManyToMany
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime startTime;
+    @Column(nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime endTime;
+    @ManyToMany(mappedBy = "screenings")
     private List<Movie> movies;
-    @Column(nullable = false)
-    private Instant startTime;
-    @Column(nullable = false)
-    private Instant endTime;
 
 
     public Screening() { }
-    public Screening(String name, CinemaHall hall, List<Movie> movies, Instant startTime, Instant endTime) {
+    public Screening(String name, CinemaHall hall, List<Movie> movies, LocalDateTime startTime, LocalDateTime endTime) {
         this.name = name;
         this.hall = hall;
-        this.movies = movies;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.movies = movies;
+        assignScreeningToMovies(movies);
+        hall.addScreening(this);
+    }
+
+    public void assignScreeningToMovies(List<Movie> movies) {
+        for (Movie movie : movies) {
+            movie.addScreening(this);
+        }
     }
 
     public void setId(Long id) {
@@ -42,19 +53,19 @@ public class Screening {
         return id;
     }
 
-    public Instant getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Instant startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public Instant getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Instant endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
