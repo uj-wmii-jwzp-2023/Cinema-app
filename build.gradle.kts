@@ -24,8 +24,9 @@ dependencies {
 
 	implementation ("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation ("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
+	implementation ("com.fasterxml.jackson.core:jackson-databind:2.13.0")
 
-    testImplementation("junit:junit:4.13.2")
+	testImplementation("junit:junit:4.13.2")
 	runtimeOnly("org.postgresql:postgresql:42.5.4")
 	runtimeOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

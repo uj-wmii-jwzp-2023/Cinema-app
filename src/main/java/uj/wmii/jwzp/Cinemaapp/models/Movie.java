@@ -1,5 +1,8 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 
 import java.time.Duration;
@@ -9,6 +12,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "movies")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -123,7 +127,7 @@ public class Movie {
                 ", duration=" + duration +
                 ", description='" + description + '\'' +
                 ", directors='" + directors + '\'' +
-                ", screenings=" + screenings +
+                ", screeningIds=" + screenings.stream().map(Screening::getId).toList() +
                 '}';
     }
 }

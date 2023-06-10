@@ -152,12 +152,12 @@ public class ScreeningController {
 
         List<Movie> movies = screening.getMovies();
 
-//        for (Movie movie : movies) {
-//            if (!movie.getScreenings().contains(screening)) {
-//                movie.addScreening(screening);
-//                LOGGER.info("Added screening to: {}", movie);
-//            }
-//        }
+        for (Movie movie : movies) {
+            if (!movie.getScreenings().contains(screening)) {
+                movie.addScreening(screening);
+                LOGGER.info("Added screening to: {}", movie);
+            }
+        }
 
         LOGGER.info("Created screening: {}", screening);
         return new ResponseEntity<>(screening, HttpStatus.OK);

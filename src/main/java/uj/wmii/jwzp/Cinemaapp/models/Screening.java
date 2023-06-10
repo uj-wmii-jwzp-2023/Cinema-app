@@ -1,5 +1,7 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -9,6 +11,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "screenings")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Screening {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
