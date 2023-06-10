@@ -37,21 +37,19 @@ jobs:
     - name: Run tests
       run: ./gradlew test
 
-    snyk:
-      name: Snyk Security Test
-      runs-on: ubuntu-latest
+  snyk:
+    name: Snyk Security Test
+    runs-on: ubuntu-latest
 
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-        - name: Install dependencies
-          run: |
-            curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-            npm install -g snyk
+      - name: Install dependencies
+        run: |
+          curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+          npm install -g snyk
 
-        - name: Run Snyk Test
-          env:
-            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-          run: snyk test
+      - name: Run Snyk Test
+        run: snyk test
