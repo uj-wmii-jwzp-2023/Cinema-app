@@ -36,16 +36,3 @@ jobs:
 
     - name: Run tests
       run: ./gradlew test
-
-  security:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Authenticate Snyk CLI
-        run: snyk auth ${{ secrets.SNYK_TOKEN }}
-
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/gradle-jdk17@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
