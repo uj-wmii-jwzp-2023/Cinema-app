@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.models.Movie;
+import uj.wmii.jwzp.Cinemaapp.models.Screening;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.CinemaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,5 +116,15 @@ public class CinemaController {
 
         LOGGER.info("Found {} movies for cinema with id {}", movies.size(), id);
         return new ResponseEntity<>(movies, HttpStatus.OK);
+    }
+
+    @GetMapping("/{cinemaId}/screenings")
+    public ResponseEntity<List<Screening>> getScreeningsByMovie(@PathVariable("cinemaId") Long cinemaId, Movie movie) {
+        LOGGER.debug("Getting screenings for cinema with id: {}, movie with id: {}", cinemaId, movie.getId());
+
+        List<Screening> screenings = service.getScreeningsByMovie(cinemaId,movie);
+
+        LOGGER.info("Found {} screenings for cinema with id: {}, movie with id: {}", screenings.size(), cinemaId, movie.getId());
+        return ResponseEntity.ok(screenings);
     }
 }

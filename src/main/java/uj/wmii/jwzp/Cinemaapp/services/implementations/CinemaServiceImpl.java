@@ -6,10 +6,13 @@ import org.springframework.stereotype.Service;
 import uj.wmii.jwzp.Cinemaapp.models.Cinema;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.models.Movie;
+import uj.wmii.jwzp.Cinemaapp.models.Screening;
 import uj.wmii.jwzp.Cinemaapp.repositories.CinemaRepository;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.CinemaService;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -133,11 +136,26 @@ public class CinemaServiceImpl implements CinemaService {
     @Transactional
     public List<Movie> getMovies(Long id) {
 
+        var currentTime = Instant.now();
 
         return getCinemaById(id).getCinemaHalls()
                 .stream()
                 .flatMap(cinemaHall -> cinemaHall.getScreenings().stream())
+                .filter(screening -> screening.getStartTime().isBefore(ChronoLocalDateTime.from(currentTime)) && screening.getEndTime().isBefore(ChronoLocalDateTime.from(currentTime)))
                 .flatMap(screening -> screening.getMovies().stream())
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<Screening> getScreeningsByMovie(Long cinemaId, Movie movie) {
+        var currentTime = Instant.now();
+
+        return getCinemaById(cinemaId).getCinemaHalls()
+                .stream()
+                .flatMap(cinemaHall -> cinemaHall.getScreenings().stream())
+                .filter(screening -> screening.getStartTime().isBefore(ChronoLocalDateTime.from(currentTime)) && screening.getEndTime().isBefore(ChronoLocalDateTime.from(currentTime)))
+                .filter(screening -> screening.getMovies().contains(movie))
                 .distinct()
                 .collect(Collectors.toList());
     }
