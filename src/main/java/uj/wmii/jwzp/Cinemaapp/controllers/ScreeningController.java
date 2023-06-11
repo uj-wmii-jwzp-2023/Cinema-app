@@ -146,19 +146,14 @@ public class ScreeningController {
 
     @PostMapping("/create")
     public ResponseEntity<Screening> createScreening(@ModelAttribute("screening") Screening screening) {
-        LOGGER.debug("Creating screening: {}", screening);
-
-        screeningService.addScreening(screening);
-
         List<Movie> movies = screening.getMovies();
 
         for (Movie movie : movies) {
-            if (!movie.getScreenings().contains(screening)) {
-                movie.addScreening(screening);
-                LOGGER.info("Added screening to: {}", movie);
-            }
+            movie.addScreening(screening);
+            LOGGER.info("Added screening to: {}", movie);
         }
 
+        screeningService.addScreening(screening);
         LOGGER.info("Created screening: {}", screening);
         return new ResponseEntity<>(screening, HttpStatus.OK);
     }

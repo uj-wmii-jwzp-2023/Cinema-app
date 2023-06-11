@@ -1,6 +1,7 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
@@ -26,6 +27,7 @@ public class Movie {
     @Column(nullable = false)
     private String directors;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             joinColumns = @JoinColumn(name = "movie_id"),
@@ -100,11 +102,7 @@ public class Movie {
         this.screenings = screenings;
     }
 
-    public void addScreening(Screening newScreening) {
-        if (!screenings.contains(newScreening)) {
-            screenings.add(newScreening);
-        }
-    }
+    public void addScreening(Screening newScreening) { this.screenings.add(newScreening); }
 
     @Override
     public boolean equals(Object o) {

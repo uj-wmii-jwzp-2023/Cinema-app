@@ -38,14 +38,6 @@ public class Screening {
         this.startTime = startTime;
         this.endTime = endTime;
         this.movies = movies;
-        assignScreeningToMovies(movies);
-        hall.addScreening(this);
-    }
-
-    public void assignScreeningToMovies(List<Movie> movies) {
-        for (Movie movie : movies) {
-            movie.addScreening(this);
-        }
     }
 
     public void setId(Long id) {
