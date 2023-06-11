@@ -12,13 +12,12 @@ public class CinemaHall {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @OneToOne
-    @PrimaryKeyJoinColumn
+    @ManyToOne
+    @JoinColumn(name = "cinema_id")
     private Cinema cinema;
-    @OneToMany
+    @OneToMany(mappedBy = "hall")
     private List<Screening> screenings;
-    @Column(nullable = false)
-    @OneToMany
+    @OneToMany(mappedBy = "cinemaHall", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seat> seats;
 
 
@@ -28,16 +27,12 @@ public class CinemaHall {
         this.cinema = cinema;
         this.screenings = new ArrayList<>();
         this.seats = new ArrayList<>();
-
-        cinema.addCinemaHall(this);
     }
 
     public CinemaHall(Cinema cinema,List<Screening> screenings, List<Seat> seats) {
         this.cinema = cinema;
         this.screenings = screenings;
         this.seats = seats;
-
-        cinema.addCinemaHall(this);
     }
 
     public void setId(Long id) {

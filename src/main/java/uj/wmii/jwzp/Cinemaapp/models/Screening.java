@@ -18,8 +18,7 @@ public class Screening {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @OneToOne
-    @PrimaryKeyJoinColumn
+    @ManyToOne
     private CinemaHall hall;
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")

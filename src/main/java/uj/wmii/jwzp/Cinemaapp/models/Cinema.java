@@ -15,13 +15,11 @@ public class Cinema {
     private String name;
     @Column
     private String address;
-    @Column(nullable = false)
-    @OneToMany
+    @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CinemaHall> cinemaHalls;
 
 
-    public Cinema() {
-    }
+    public Cinema() { }
 
     public Cinema(String name, String address) {
         this.name = name;
@@ -67,9 +65,7 @@ public class Cinema {
         this.cinemaHalls = cinemaHalls;
     }
 
-    public void addCinemaHall(CinemaHall newCinemaHall) {
-        this.cinemaHalls.add(newCinemaHall);
-    }
+    public void addCinemaHall(CinemaHall newCinemaHall) { this.cinemaHalls.add(newCinemaHall); }
 
     @Override
     public boolean equals(Object o) {

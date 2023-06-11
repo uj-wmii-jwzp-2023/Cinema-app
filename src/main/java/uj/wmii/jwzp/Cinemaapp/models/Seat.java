@@ -10,13 +10,15 @@ public class Seat {
     private Long id;
     @Column(nullable = false)
     private Availability availability;
-
+    @ManyToOne
+    private CinemaHall cinemaHall;
 
     public Seat() {
         this.availability = Availability.FREE;
     }
 
-    public Seat(Availability availability) {
+    public Seat(CinemaHall cinemaHall, Availability availability) {
+        this.cinemaHall = cinemaHall;
         this.availability = availability;
     }
 
@@ -34,5 +36,13 @@ public class Seat {
 
     public void setAvailability(Availability availability) {
         this.availability = availability;
+    }
+
+    public CinemaHall getCinemaHall() {
+        return cinemaHall;
+    }
+
+    public void setCinemaHall(CinemaHall cinemaHall) {
+        this.cinemaHall = cinemaHall;
     }
 }

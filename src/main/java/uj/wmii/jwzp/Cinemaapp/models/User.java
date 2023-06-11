@@ -2,9 +2,7 @@ package uj.wmii.jwzp.Cinemaapp.models;
 
 import javax.persistence.*;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
@@ -22,23 +20,20 @@ public class User{
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
-            joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"))
-
-    private Collection<Role> roles;
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Set<Role> roles;
 
 
     public User() {
-        this.roles = List.of(new Role("NORMAL_USER"));
+        this.roles = new HashSet<>(Set.of(new Role("NORMAL_USER")));
     }
 
     public User(String email, String name, String password) {
         this.email = email;
         this.name = name;
         this.password = password;
-        this.roles = List.of(new Role("NORMAL_USER"));
+        this.roles = new HashSet<>(Set.of(new Role("NORMAL_USER")));
     }
 
     public Long getId() {
@@ -69,11 +64,11 @@ public class User{
         this.password = password;
     }
 
-    public Collection<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uj.wmii.jwzp.Cinemaapp.models.Availability;
+import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.models.Seat;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.SeatService;
 import org.slf4j.Logger;
@@ -78,10 +79,11 @@ public class SeatController {
 
     @PutMapping("{seatId}")
     public ResponseEntity<String> updateSeat(@PathVariable("seatId") Long id,
+                                             @RequestParam CinemaHall cinemaHall,
                                              @RequestParam Availability availability) {
         LOGGER.debug("Updating seat with id: {}", id);
 
-        String updatedSeat = service.updateSeat(id, availability);
+        String updatedSeat = service.updateSeat(id, cinemaHall, availability);
 
         LOGGER.info("Updated seat with id {}: {}", id, updatedSeat);
         return new ResponseEntity<>(updatedSeat, HttpStatus.OK);
@@ -89,6 +91,7 @@ public class SeatController {
 
     @PatchMapping("{seatId}")
     public ResponseEntity<String> patchSeat(@PathVariable("seatId") Long id,
+                                            @RequestParam(required = false) CinemaHall cinemaHall,
                                             @RequestParam(required = false) Availability availability) {
         LOGGER.debug("Patching seat with id: {}", id);
 
@@ -99,7 +102,7 @@ public class SeatController {
             return new ResponseEntity<>("Seat with id " + id + " does not exist", HttpStatus.NOT_FOUND);
         }
 
-        String patchedSeat = service.patchSeat(id, availability);
+        String patchedSeat = service.patchSeat(id, cinemaHall, availability);
         LOGGER.info("Patched seat with id {}: {}", id, patchedSeat);
         return new ResponseEntity<>(patchedSeat, HttpStatus.OK);
     }
