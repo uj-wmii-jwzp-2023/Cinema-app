@@ -4,6 +4,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uj.wmii.jwzp.Cinemaapp.models.Availability;
+import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.models.Seat;
 import uj.wmii.jwzp.Cinemaapp.repositories.SeatRepository;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.SeatService;
@@ -46,10 +47,10 @@ public class SeatServiceImpl implements SeatService {
     }
 
     @Transactional
-    public String updateSeat(Long id, Availability availability) {
+    public String updateSeat(Long id, CinemaHall cinemaHall, Availability availability) {
         Seat seat = repository.findById(id).orElse(null);
         if(seat == null) {
-            seat = new Seat(availability);
+            seat = new Seat(cinemaHall, availability);
 
             addSeat(seat);
             return "Seat created";
@@ -69,12 +70,17 @@ public class SeatServiceImpl implements SeatService {
     }
 
     @Transactional
-    public String patchSeat(Long id, Availability availability) {
+    public String patchSeat(Long id, CinemaHall cinemaHall, Availability availability) {
         Seat seat = repository.findById(id).orElseThrow(
                 () -> new IllegalStateException("Seat with id " + id + " does not exist")
         );
 
         String result = "";
+
+        if(!cinemaHall.equals(seat.getCinemaHall())) {
+            seat.setAvailability(availability);
+            result += "Cinema Hall changed\n";
+        }
 
         if(!availability.equals(seat.getAvailability())) {
             seat.setAvailability(availability);

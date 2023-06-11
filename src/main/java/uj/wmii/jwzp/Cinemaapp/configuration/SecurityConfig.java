@@ -8,6 +8,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.UserService;
 
@@ -34,7 +35,8 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/registration", "/login").permitAll()
+                .antMatchers("/registration", "/login", "/screenings/create").permitAll()
+                .antMatchers("/cinemas/**", "/cinemaHalls/**", "/screenings/**", "/movies/**", "/seats/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/users").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -46,5 +48,10 @@ public class SecurityConfig {
                 .logoutUrl("/logout")
                 .invalidateHttpSession(true);
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

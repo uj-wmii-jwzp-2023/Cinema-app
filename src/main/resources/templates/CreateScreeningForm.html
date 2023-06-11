@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:temporals="java.time.temporal.TemporalAccessor">
+<head>
+  <title>Create Screening</title>
+</head>
+<body>
+<h2>Create Screening</h2>
+
+<form action="/screenings/create" method="post">
+  <label for="name">Screening Name:</label>
+  <input type="text" id="name" name="name" required><br><br>
+
+  <label for="hall">Cinema Hall ID:</label>
+  <input type="number" id="hall" name="hall" required><br><br>
+
+  <input type="datetime-local" id="startTime" name="startTime" required
+         value="${#temporals.formatDateTime(screening.startTime, 'yyyy-MM-dd\\'T\\'HH:mm')}"><br><br>
+
+  <input type="datetime-local" id="endTime" name="endTime" required
+         value="${#temporals.formatDateTime(screening.endTime, 'yyyy-MM-dd\\'T\\'HH:mm')}"><br><br>
+
+
+
+  <label for="movies">Movies:</label>
+  <select id="movies" name="movies" multiple required>
+    <!-- Dynamicznie generowane opcje filmów -->
+    <option th:each="movie : ${movies}" th:value="${movie.id}" th:text="${movie.title}"></option>
+  </select><br><br>
+
+  <input type="submit" value="Submit">
+</form>
+</body>
+</html>

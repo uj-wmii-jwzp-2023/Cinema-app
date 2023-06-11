@@ -4,7 +4,7 @@ import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.models.Movie;
 import uj.wmii.jwzp.Cinemaapp.models.Screening;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ScreeningService {
@@ -17,7 +17,7 @@ public interface ScreeningService {
 
     String deleteScreening(Long id);
 
-    String updateScreening(Long id, String name, CinemaHall hall, List<Movie> movies, Instant startTime, Instant endTime);
+    String updateScreening(Long id, String name, CinemaHall hall, List<Movie> movies, LocalDateTime startTime, LocalDateTime endTime);
 
-    String patchScreening(Long id, String name, CinemaHall hall, List<Movie> movies, Instant startTime, Instant endTime);
+    String patchScreening(Long id, String name, CinemaHall hall, List<Movie> movies, LocalDateTime startTime, LocalDateTime endTime);
 }

@@ -1,37 +1,42 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "screenings")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Screening {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @Column(nullable = false)
     private String name;
-    @OneToOne
-    @PrimaryKeyJoinColumn
+    @ManyToOne
     private CinemaHall hall;
     @Column(nullable = false)
-    @ManyToMany
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime startTime;
+    @Column(nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime endTime;
+    @ManyToMany(mappedBy = "screenings")
     private List<Movie> movies;
-    @Column(nullable = false)
-    private Instant startTime;
-    @Column(nullable = false)
-    private Instant endTime;
 
 
     public Screening() { }
-    public Screening(String name, CinemaHall hall, List<Movie> movies, Instant startTime, Instant endTime) {
+    public Screening(String name, CinemaHall hall, List<Movie> movies, LocalDateTime startTime, LocalDateTime endTime) {
         this.name = name;
         this.hall = hall;
-        this.movies = movies;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.movies = movies;
     }
 
     public void setId(Long id) {
@@ -42,19 +47,19 @@ public class Screening {
         return id;
     }
 
-    public Instant getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Instant startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public Instant getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Instant endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 

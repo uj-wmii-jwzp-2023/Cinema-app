@@ -2,6 +2,7 @@ package uj.wmii.jwzp.Cinemaapp.models;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,17 +12,22 @@ public class CinemaHall {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @OneToOne
-    @PrimaryKeyJoinColumn
+    @ManyToOne
+    @JoinColumn(name = "cinema_id")
     private Cinema cinema;
-    @OneToMany
+    @OneToMany(mappedBy = "hall")
     private List<Screening> screenings;
-    @Column(nullable = false)
-    @OneToMany
+    @OneToMany(mappedBy = "cinemaHall", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seat> seats;
 
 
     public CinemaHall() { }
+
+    public CinemaHall(Cinema cinema) {
+        this.cinema = cinema;
+        this.screenings = new ArrayList<>();
+        this.seats = new ArrayList<>();
+    }
 
     public CinemaHall(Cinema cinema,List<Screening> screenings, List<Seat> seats) {
         this.cinema = cinema;
@@ -59,6 +65,14 @@ public class CinemaHall {
 
     public void setSeats(List<Seat> seats) {
         this.seats = seats;
+    }
+
+    public void addScreening(Screening newScreening) {
+        this.screenings.add(newScreening);
+    }
+
+    public void addSeat(Seat newSeat) {
+        this.seats.add(newSeat);
     }
 
     @Override

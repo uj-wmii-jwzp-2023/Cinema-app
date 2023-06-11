@@ -1,6 +1,7 @@
 package uj.wmii.jwzp.Cinemaapp.services.interfaces;
 
 import uj.wmii.jwzp.Cinemaapp.models.Availability;
+import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.models.Seat;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface SeatService {
 
     String deleteSeat(Long id);
 
-    String updateSeat(Long id, Availability availability);
+    String updateSeat(Long id, CinemaHall cinemaHall, Availability availability);
 
-    String patchSeat(Long id, Availability availability);
+    String patchSeat(Long id, CinemaHall cinemaHall, Availability availability);
 }

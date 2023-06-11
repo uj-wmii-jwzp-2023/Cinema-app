@@ -1,33 +1,52 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "movies")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(nullable = false)
-    private String name;
+    private String title;
     @Column(nullable = false)
     private Duration duration;
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)
     private String directors;
-    @Column(nullable = false)
+
+    @JsonIgnore
     @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "screening_id")
+    )
     private List<Screening> screenings;
 
     public Movie(){}
 
-    public Movie(String name, Duration duration, String description, String directors, List<Screening> screenings) {
-        this.name = name;
+    public Movie(String title, Duration duration, String description, String directors) {
+        this.title = title;
+        this.duration = duration;
+        this.description = description;
+        this.directors = directors;
+        this.screenings = new ArrayList<>();
+    }
+
+    public Movie(String title, Duration duration, String description, String directors, List<Screening> screenings) {
+        this.title = title;
         this.duration = duration;
         this.description = description;
         this.directors = directors;
@@ -43,12 +62,12 @@ public class Movie {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -83,28 +102,30 @@ public class Movie {
         this.screenings = screenings;
     }
 
+    public void addScreening(Screening newScreening) { this.screenings.add(newScreening); }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Movie movie = (Movie) o;
-        return Objects.equals(name, movie.name) && Objects.equals(duration, movie.duration) && Objects.equals(description, movie.description) && Objects.equals(directors, movie.directors) && Objects.equals(screenings, movie.screenings);
+        return Objects.equals(title, movie.title) && Objects.equals(duration, movie.duration) && Objects.equals(description, movie.description) && Objects.equals(directors, movie.directors) && Objects.equals(screenings, movie.screenings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, duration, description, directors, screenings);
+        return Objects.hash(title, duration, description, directors, screenings);
     }
 
     @Override
     public String toString() {
         return "Movie{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", title='" + title + '\'' +
                 ", duration=" + duration +
                 ", description='" + description + '\'' +
                 ", directors='" + directors + '\'' +
-                ", screenings=" + screenings +
+                ", screeningIds=" + screenings.stream().map(Screening::getId).toList() +
                 '}';
     }
 }

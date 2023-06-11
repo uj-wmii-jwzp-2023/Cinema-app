@@ -9,7 +9,7 @@ import uj.wmii.jwzp.Cinemaapp.repositories.ScreeningRepository;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.ScreeningService;
 
 import javax.transaction.Transactional;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,9 +34,9 @@ public class ScreeningServiceImpl implements ScreeningService {
 
     @Override
     public Screening addScreening(Screening screening) {
-        if(checkCollisions(screening.getId(),screening.getHall(),screening.getStartTime(),screening.getEndTime())) {
-            return null;
-        }
+//        if(checkCollisions(screening.getId(),screening.getHall(),screening.getStartTime(),screening.getEndTime())) {
+//            return null;
+//        }
         return repository.save(screening);
     }
 
@@ -48,7 +48,7 @@ public class ScreeningServiceImpl implements ScreeningService {
     }
 
     @Transactional
-    public String updateScreening(Long id, String name, CinemaHall hall, List<Movie> movies, Instant startTime, Instant endTime) {
+    public String updateScreening(Long id, String name, CinemaHall hall, List<Movie> movies, LocalDateTime startTime, LocalDateTime endTime) {
         if(checkCollisions(id,hall,startTime,endTime)) {
             return null;
         }
@@ -94,7 +94,7 @@ public class ScreeningServiceImpl implements ScreeningService {
     }
 
     @Transactional
-    public String patchScreening(Long id, String name, CinemaHall hall, List<Movie> movies, Instant startTime, Instant endTime) {
+    public String patchScreening(Long id, String name, CinemaHall hall, List<Movie> movies, LocalDateTime startTime, LocalDateTime endTime) {
         if(checkCollisions(id,hall,startTime,endTime)) {
             return null;
         }
@@ -133,7 +133,7 @@ public class ScreeningServiceImpl implements ScreeningService {
             return result;
     }
 
-    public boolean checkCollisions(Long id, CinemaHall hall ,Instant startTime, Instant endTime) {
+    public boolean checkCollisions(Long id, CinemaHall hall, LocalDateTime startTime, LocalDateTime endTime) {
         var screenings = repository.findAll()
                 .stream().filter(s -> s.getHall().equals(hall))
                 .filter(s -> !s.getId().equals(id))
