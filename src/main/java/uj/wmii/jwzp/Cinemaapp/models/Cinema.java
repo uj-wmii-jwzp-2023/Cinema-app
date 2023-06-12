@@ -1,5 +1,7 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +63,7 @@ public class Cinema {
         return cinemaHalls;
     }
 
+    @JsonIgnore
     public void setCinemaHalls(List<CinemaHall> cinemaHalls) {
         this.cinemaHalls = cinemaHalls;
     }
@@ -82,11 +85,16 @@ public class Cinema {
 
     @Override
     public String toString() {
-        return "Cinema{" +
+        String result = "Cinema{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", cinemaHalls=" + cinemaHalls +
-                '}';
+                ", address='" + address + '\'';
+
+        if (cinemaHalls != null)
+                result += ", cinemaHallsIds=" + cinemaHalls.stream().map(CinemaHall::getId).toList() + '}';
+        else
+            result += '}';
+
+        return result;
     }
 }

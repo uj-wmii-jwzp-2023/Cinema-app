@@ -1,5 +1,7 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -42,6 +44,7 @@ public class Seat {
         return cinemaHall;
     }
 
+    @JsonIgnore
     public void setCinemaHall(CinemaHall cinemaHall) {
         this.cinemaHall = cinemaHall;
     }

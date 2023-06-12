@@ -1,10 +1,12 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +28,9 @@ public class Screening {
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime endTime;
+    @Column(nullable = false)
+    private BigDecimal ticketPrice;
+    @JsonManagedReference
     @ManyToMany(mappedBy = "screenings")
     private List<Movie> movies;
 
@@ -87,6 +92,10 @@ public class Screening {
         this.movies = movies;
     }
 
+    public BigDecimal getTicketPrice() { return ticketPrice; }
+
+    public void setTicketPrice(BigDecimal ticketPrice) { this.ticketPrice = ticketPrice; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -102,13 +111,17 @@ public class Screening {
 
     @Override
     public String toString() {
-        return "Screening{" +
+        String result = "Screening{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", hall=" + hall +
-                ", movies=" + movies +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                '}';
+                ", hallId=" + (hall != null ? hall.getId() : null);
+
+        if (movies != null)
+            result += ", movieIds=" + movies.stream().map(Movie::getId).toList();
+
+        result += ", startTime=" + startTime +
+                  ", endTime=" + endTime +
+                  '}';
+        return result;
     }
 }

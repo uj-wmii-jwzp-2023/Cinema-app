@@ -2,6 +2,7 @@ package uj.wmii.jwzp.Cinemaapp.models;
 
 import javax.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Entity
@@ -16,7 +17,8 @@ public class User{
     private String name;
     @Column(nullable = false)
     private String password;
-
+    @Column(nullable = false)
+    private BigDecimal accountBalance;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
@@ -27,6 +29,7 @@ public class User{
 
     public User() {
         this.roles = new HashSet<>(Set.of(new Role("NORMAL_USER")));
+        accountBalance = new BigDecimal(0);
     }
 
     public User(String email, String name, String password) {
@@ -34,6 +37,7 @@ public class User{
         this.name = name;
         this.password = password;
         this.roles = new HashSet<>(Set.of(new Role("NORMAL_USER")));
+        accountBalance = new BigDecimal(0);
     }
 
     public Long getId() {
@@ -72,12 +76,16 @@ public class User{
         this.roles = roles;
     }
 
+    public BigDecimal getAccountBalance() { return accountBalance; }
+
+    public void setAccountBalance(BigDecimal accountBalance) { this.accountBalance = accountBalance; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return email.equals(user.email) && name.equals(user.name) && password.equals(user.password);
+        return name.equals(user.name) && password.equals(user.password);
     }
 
     @Override

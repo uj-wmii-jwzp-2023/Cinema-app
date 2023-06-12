@@ -27,7 +27,6 @@ public class Movie {
     @Column(nullable = false)
     private String directors;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(
             joinColumns = @JoinColumn(name = "movie_id"),
@@ -98,10 +97,12 @@ public class Movie {
         return screenings;
     }
 
+    @JsonIgnore
     public void setScreenings(List<Screening> screenings) {
         this.screenings = screenings;
     }
 
+    @JsonIgnore
     public void addScreening(Screening newScreening) { this.screenings.add(newScreening); }
 
     @Override
@@ -119,13 +120,18 @@ public class Movie {
 
     @Override
     public String toString() {
-        return "Movie{" +
+        String result = "Movie{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", duration=" + duration +
                 ", description='" + description + '\'' +
-                ", directors='" + directors + '\'' +
-                ", screeningIds=" + screenings.stream().map(Screening::getId).toList() +
-                '}';
+                ", directors='" + directors + '\'';
+
+        if (screenings != null)
+                result += ", screeningIds=" + screenings.stream().map(Screening::getId).toList() + '}';
+        else
+            result += '}';
+
+        return result;
     }
 }

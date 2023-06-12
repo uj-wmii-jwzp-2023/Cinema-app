@@ -1,5 +1,7 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class CinemaHall {
         this.seats = new ArrayList<>();
     }
 
-    public CinemaHall(Cinema cinema,List<Screening> screenings, List<Seat> seats) {
+    public CinemaHall(Cinema cinema, List<Screening> screenings, List<Seat> seats) {
         this.cinema = cinema;
         this.screenings = screenings;
         this.seats = seats;
@@ -55,14 +57,14 @@ public class CinemaHall {
         return screenings;
     }
 
+    @JsonIgnore
     public void setScreenings(List<Screening> screenings) {
         this.screenings = screenings;
     }
 
-    public List<Seat> getSeats() {
-        return seats;
-    }
+    public List<Seat> getSeats() { return seats; }
 
+    @JsonIgnore
     public void setSeats(List<Seat> seats) {
         this.seats = seats;
     }
@@ -73,6 +75,23 @@ public class CinemaHall {
 
     public void addSeat(Seat newSeat) {
         this.seats.add(newSeat);
+    }
+
+    @JsonIgnore
+    public Integer getNumOfFreeSeats() {
+        Integer numOfFreeSeats = 0;
+
+        for (Seat seat : seats)
+            if (seat.getAvailability() == Availability.FREE)
+                numOfFreeSeats++;
+
+        return numOfFreeSeats;
+    }
+
+    public void releaseAllSeats() {
+        for (Seat seat : seats)
+            if (seat.getAvailability() != Availability.FREE)
+                seat.setAvailability(Availability.FREE);
     }
 
     @Override
@@ -90,11 +109,18 @@ public class CinemaHall {
 
     @Override
     public String toString() {
-        return "CinemaHall{" +
+        String result = "CinemaHall{" +
                 "id=" + id +
-                ", cinema=" + cinema +
-                ", screenings=" + screenings +
-                ", seats=" + seats +
-                '}';
+                ", cinemaId=" + (cinema != null ? cinema.getId() : null);
+
+        if (screenings != null)
+            result += ", screeningsIds=" + screenings.stream().map(Screening::getId).toList();
+
+        if (seats != null)
+            result += ", seatsIds=" + seats.stream().map(Seat::getId).toList() + '}';
+        else
+            result += '}';
+
+        return result;
     }
 }
