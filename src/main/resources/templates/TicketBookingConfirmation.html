@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Potwierdzenie zamówienia</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .details {
+      margin: 20px auto;
+      max-width: 600px;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .ticket-details {
+      margin-bottom: 20px;
+    }
+
+    .ticket-details strong {
+      display: inline-block;
+      width: 150px;
+      font-weight: bold;
+    }
+
+    .price {
+      font-size: 18px;
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .account-balance {
+      font-size: 16px;
+      color: #777;
+      margin-bottom: 20px;
+    }
+
+    .confirm-button {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .confirm-button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+<h1>Potwierdzenie zamówienia</h1>
+<div class="details">
+  <div class="ticket-details">
+    <strong>Nazwa seansu:</strong> <span id="movie-name"> </span><br>
+    <strong>Data i godzina:</strong> <span id="date-time"> </span><br>
+    <strong>Sala:</strong> <span id="hall"> </span>
+  </div>
+  <div class="price">
+    <strong>Cena za bilet:</strong> <span id="ticket-price"> zł</span>
+  </div>
+  <div class="account-balance">
+    <strong>Saldo konta:</strong> <span id="account-balance"> zł</span>
+  </div>
+  <button class="confirm-button" onclick="confirmTransaction()">Potwierdź transakcję</button>
+</div>
+
+<script>
+  // Pobierz dane seansu, cenę biletu i saldo konta użytkownika z serwera
+
+  // Przykładowe dane
+  var movieName = "Nazwa seansu";
+  var dateTime = "Data i godzina";
+  var hall = "Sala";
+  var ticketPrice = "20.00 zł";
+  var accountBalance = "100.00 zł";
+
+  // Ustaw wartości na stronie
+  document.getElementById("movie-name").textContent = movieName;
+  document.getElementById("date-time").textContent = dateTime;
+  document.getElementById("hall").textContent = hall;
+  document.getElementById("ticket-price").textContent = ticketPrice;
+  document.getElementById("account-balance").textContent = accountBalance;
+
+  // Funkcja wywoływana po kliknięciu przycisku potwierdzającego transakcję
+  function confirmTransaction() {
+    // Wyślij żądanie do serwera w celu potwierdzenia transakcji
+
+    // Przykładowa obsługa potwierdzenia transakcji
+    alert("Transakcja została potwierdzona!");
+  }
+</script>
+</body>
+</html>

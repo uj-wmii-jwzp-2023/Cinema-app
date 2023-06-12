@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!-- Tworzenie listy seansów -->
+<ul>
+    <!-- Pętla foreach iterująca po seansach -->
+    <!-- Używamy th:each, jeśli korzystamy z Thymeleaf -->
+    <!-- Zmienne oznaczone symbolem @ są pobierane z modelu -->
+    <li th:each="screening : ${screenings}">
+        <!-- Wyświetlanie informacji o seansie -->
+        <p><u><i>Nazwa seansu: <span th:text="${screening.name}"></span></i></u></p>
+        <p>Godzina rozpoczęcia: <span th:text="${#temporals.format(screening.startTime, 'yyyy-MM-dd HH:mm')}"></span></p>
+        <p>Godzina zakończenia: <span th:text="${#temporals.format(screening.endTime, 'yyyy-MM-dd HH:mm')}"></span></p>
+        <!-- Wyświetlanie informacji o filmach -->
+        <p>Repertuar: </p>
+        <ul>
+            <!-- Pętla foreach iterująca po filmach w seansie -->
+            <li th:each="movie : ${screening.movies}">
+                <!-- Wyświetlanie informacji o filmie -->
+                <p><b>Tytuł filmu: <span th:text="${movie.title}"></span></b></p>
+                <p>Czas trwania: <span th:text="${movie.duration.toHours()} + 'H' + ${movie.duration.toMinutes() % 60} + 'M' + ${movie.duration.getSeconds() % 60} + 'S'"></span></p>
+            </li>
+        </ul>
+        <!-- Dodaj przyciski CHECK DETAILS -->
+        <form th:action="@{/screenings/details}" method="post">
+            <!-- Ukryte pole z ID seansu -->
+            <input type="hidden" name="screeningId" th:value="${screening.id}" />
+            <button type="submit">CHECK DETAILS</button>
+        </form>
+    </li>
+</ul>
+
+</body>
+</html>

@@ -153,8 +153,45 @@ public class ScreeningController {
             LOGGER.info("Added screening to: {}", movie);
         }
 
+        screening.getHall().addScreening(screening);
+
         screeningService.addScreening(screening);
         LOGGER.info("Created screening: {}", screening);
         return new ResponseEntity<>(screening, HttpStatus.OK);
+    }
+
+    @GetMapping("/showAll")
+    public String getScreenings(Model model) {
+        List<Screening> screenings = screeningService.getScreenings();
+        model.addAttribute("screenings", screenings);
+        return "ShowAllScreenings";
+    }
+
+    @PostMapping("/details")
+    public String showScreeningDetails(@RequestParam("screeningId") Long screeningId, Model model) {
+        // Pobierz seans na podstawie przesłanego ID seansu
+        Screening screening = screeningService.getScreeningById(screeningId);
+
+        // Przekazanie seansu do modelu, aby wyświetlić jego szczegóły
+        model.addAttribute("screening", screening);
+        model.addAttribute("availableSeats", screening.getHall().getNumOfFreeSeats());
+
+        return "ScreeningDetails";
+    }
+
+    @PostMapping("/book")
+    public String bookScreening(@RequestParam("screeningId") Long screeningId, Model model) {
+        Screening screening = screeningService.getScreeningById(screeningId);
+
+        // Przetwarzaj dalszą logikę rezerwacji, np. sprawdzanie dostępności miejsc, itp.
+        if (screening.getHall().getNumOfFreeSeats() == 0)
+            return "NoSeatsAvailable";
+
+        // Dodaj odpowiednie dane do modelu
+        model.addAttribute("screening", screening);
+        model.addAttribute("availableSeats", screening.getHall().getNumOfFreeSeats());
+        model.addAttribute("ticketPrice", screening.getTicketPrice());
+
+        return "TicketBookingConfirmation";
     }
 }
