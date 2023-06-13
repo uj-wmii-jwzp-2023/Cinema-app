@@ -67,24 +67,22 @@ public class SeatController {
     }
 
     @PostMapping("/dto")
-    public ResponseEntity<String> addSeat(@RequestBody SeatDTO seatDTO) {
-        Seat seat = new Seat();
-        seat.setAvailability(seatDTO.getAvailability());
-
+    public ResponseEntity<Seat> addSeat(@RequestBody SeatDTO seatDTO) {
         Long cinemaHallId = seatDTO.getCinemaHallId();
         CinemaHall cinemaHall = cinemaHallService.getCinemaHallById(cinemaHallId);
 
         if (cinemaHall == null) {
             LOGGER.info("CinemaHall with id {} not found", cinemaHallId);
-            return new ResponseEntity<>("CinemaHall with id " + cinemaHallId + " does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        seat.setCinemaHall(cinemaHall);
-        cinemaHall.addSeat(seat);
+        Seat newSeat = new Seat(cinemaHall, seatDTO.getAvailability());
 
-        seatService.addSeat(seat);
+        cinemaHall.addSeat(newSeat);
 
-        return ResponseEntity.ok("Seat added successfully");
+        seatService.addSeat(newSeat);
+
+        return new ResponseEntity<>(newSeat, HttpStatus.OK);
     }
 
     @DeleteMapping("{seatId}")

@@ -5,9 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import uj.wmii.jwzp.Cinemaapp.DataTransferObjects.ScreeningDTO;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.models.Movie;
 import uj.wmii.jwzp.Cinemaapp.models.Screening;
+import uj.wmii.jwzp.Cinemaapp.services.interfaces.CinemaHallService;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.MovieService;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.ScreeningService;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,11 +29,13 @@ public class ScreeningController {
 
     private final ScreeningService screeningService;
     private final MovieService movieService;
+    private final CinemaHallService cinemaHallService;
 
     @Autowired
-    public ScreeningController(ScreeningService screeningService, MovieService movieService) {
+    public ScreeningController(ScreeningService screeningService, MovieService movieService, CinemaHallService cinemaHallService) {
         this.screeningService = screeningService;
         this.movieService = movieService;
+        this.cinemaHallService = cinemaHallService;
     }
 
     @GetMapping("/{screeningId}")
@@ -62,6 +67,15 @@ public class ScreeningController {
     public ResponseEntity<Screening> addScreening(@RequestBody Screening screening) {
         LOGGER.debug("Adding screening: {}", screening);
 
+        List<Movie> movies = screening.getMovies();
+
+        for (Movie movie : movies) {
+            movie.addScreening(screening);
+            LOGGER.info("Added screening to: {}", movie);
+        }
+
+        screening.getHall().addScreening(screening);
+
         Screening addedScreening = screeningService.addScreening(screening);
 
         if (addedScreening == null) {
@@ -71,6 +85,42 @@ public class ScreeningController {
 
         LOGGER.info("Added screening with id {}: {}", addedScreening.getId(), addedScreening);
         return new ResponseEntity<>(addedScreening, HttpStatus.OK);
+    }
+
+    @PostMapping("/dto")
+    public ResponseEntity<Screening> addScreening(@RequestBody ScreeningDTO screeningDTO) {
+        Long cinemaHallId = screeningDTO.getCinemaHallId();
+        CinemaHall cinemaHall = cinemaHallService.getCinemaHallById(cinemaHallId);
+
+        if (cinemaHall == null) {
+            LOGGER.info("CinemaHall with id {} not found", cinemaHallId);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        List<Movie> movies = new ArrayList<>();
+        for (Long id : screeningDTO.getMovieIds()) {
+            Movie movie = movieService.getMovieById(id);
+
+            if (movie == null) {
+                LOGGER.info("Movie with id {} not found", id);
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+            else
+                movies.add(movie);
+        }
+
+        Screening newScreening = new Screening(screeningDTO.getName(), cinemaHall, movies, screeningDTO.getStartTime(), screeningDTO.getEndTime());
+
+        for (Movie movie : movies) {
+            movie.addScreening(newScreening);
+            LOGGER.info("Added screening to: {}", movie);
+        }
+
+        newScreening.getHall().addScreening(newScreening);
+
+        screeningService.addScreening(newScreening);
+
+        return new ResponseEntity<>(newScreening, HttpStatus.OK);
     }
 
     @DeleteMapping("{screeningId}")

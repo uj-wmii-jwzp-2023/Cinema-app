@@ -6,7 +6,6 @@ public class SeatDTO {
     private Long cinemaHallId;
     private Availability availability;
 
-
     public SeatDTO() {}
 
     public SeatDTO(Long cinemaHallId, Availability availability) {
