@@ -1,13 +1,18 @@
 package uj.wmii.jwzp.Cinemaapp.models;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class User{
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -29,7 +34,7 @@ public class User{
 
     public User() {
         this.roles = new HashSet<>(Set.of(new Role("NORMAL_USER")));
-        accountBalance = new BigDecimal(0);
+        accountBalance = new BigDecimal(100);
     }
 
     public User(String email, String name, String password) {
@@ -37,7 +42,7 @@ public class User{
         this.name = name;
         this.password = password;
         this.roles = new HashSet<>(Set.of(new Role("NORMAL_USER")));
-        accountBalance = new BigDecimal(0);
+        accountBalance = new BigDecimal(100);
     }
 
     public Long getId() {
@@ -60,8 +65,40 @@ public class User{
         this.name = name;
     }
 
+
+    @Override
+    public String getUsername() { return email; }
+
+    @Override
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {

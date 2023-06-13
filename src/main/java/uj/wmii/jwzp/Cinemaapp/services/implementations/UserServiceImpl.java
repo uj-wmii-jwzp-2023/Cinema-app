@@ -13,7 +13,7 @@ import uj.wmii.jwzp.Cinemaapp.models.Role;
 import uj.wmii.jwzp.Cinemaapp.models.User;
 import uj.wmii.jwzp.Cinemaapp.repositories.UserRepository;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.UserService;
-import uj.wmii.jwzp.Cinemaapp.web.UserRegistrationDto;
+import uj.wmii.jwzp.Cinemaapp.DataTransferObjects.UserRegistrationDTO;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
-    public User registerUser(UserRegistrationDto userData) {
+    public User registerUser(UserRegistrationDTO userData) {
         if (CorrectEmail(userData.getEmail()) && CorrectName(userData.getName()) && CorrectPassword(userData.getPassword())) {
             User user = new User(userData.getEmail(), userData.getName(), passwordEncoder.encode(userData.getPassword()));
             return repository.save(user);
@@ -56,6 +56,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = repository.findUserByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+    }
+
+    public User getUserByEmail(String email) {
+        if (email.isEmpty())
+            System.out.println("EMAIL_EMPTY");
+        else
+            System.out.println("email: " + email);
+
+        return repository.findUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){

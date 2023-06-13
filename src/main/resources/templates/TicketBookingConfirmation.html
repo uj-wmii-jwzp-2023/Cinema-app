@@ -61,46 +61,47 @@
   </style>
 </head>
 <body>
+<p><u><i>Nazwa seansu: <span th:text="${screening.name}"></span></i></u></p>
 <h1>Potwierdzenie zamówienia</h1>
 <div class="details">
   <div class="ticket-details">
-    <strong>Nazwa seansu:</strong> <span id="movie-name"> </span><br>
-    <strong>Data i godzina:</strong> <span id="date-time"> </span><br>
-    <strong>Sala:</strong> <span id="hall"> </span>
+    <strong>Nazwa seansu:</strong> <span id="movie-name" th:text="${screening.name}"></span><br>
+    <strong>Data i godzina:</strong> <span th:text="${#temporals.format(screening.startTime, 'yyyy-MM-dd HH:mm')}"></span><br>
+    <strong>Sala:</strong> <span id="hall" th:text="${screening.hall.id}"></span><br>
+    Ilość pozostałych miejsc: <span id="free-seats" th:text="${numOfSeats}"></span>
   </div>
   <div class="price">
-    <strong>Cena za bilet:</strong> <span id="ticket-price"> zł</span>
+    <strong>Cena za bilet:</strong> <span id="ticket-price" th:text="${ticketPrice}"> zł</span>
   </div>
   <div class="account-balance">
-    <strong>Saldo konta:</strong> <span id="account-balance"> zł</span>
+    <strong>Saldo konta:</strong> <span id="account-balance" th:text="${accountBalance}"> zł</span>
   </div>
   <button class="confirm-button" onclick="confirmTransaction()">Potwierdź transakcję</button>
 </div>
 
 <script>
-  // Pobierz dane seansu, cenę biletu i saldo konta użytkownika z serwera
-
-  // Przykładowe dane
-  var movieName = "Nazwa seansu";
-  var dateTime = "Data i godzina";
-  var hall = "Sala";
-  var ticketPrice = "20.00 zł";
-  var accountBalance = "100.00 zł";
-
-  // Ustaw wartości na stronie
-  document.getElementById("movie-name").textContent = movieName;
-  document.getElementById("date-time").textContent = dateTime;
-  document.getElementById("hall").textContent = hall;
-  document.getElementById("ticket-price").textContent = ticketPrice;
-  document.getElementById("account-balance").textContent = accountBalance;
-
-  // Funkcja wywoływana po kliknięciu przycisku potwierdzającego transakcję
   function confirmTransaction() {
-    // Wyślij żądanie do serwera w celu potwierdzenia transakcji
+    var accountBalance = parseFloat(document.getElementById("account-balance").textContent);
+    var ticketPrice = parseFloat(document.getElementById("ticket-price").textContent);
+    var numOfFreeSeats = parseInt(document.getElementById("free-seats").textContent);
 
-    // Przykładowa obsługa potwierdzenia transakcji
-    alert("Transakcja została potwierdzona!");
+    if (accountBalance >= ticketPrice && numOfFreeSeats > 0) {
+      var newBalance = accountBalance - ticketPrice;
+      var updatedNumOfSeats = numOfFreeSeats - 1;
+
+      document.getElementById("account-balance").textContent = newBalance.toFixed(2) + " zł";
+      document.getElementById("free-seats").textContent = updatedNumOfSeats.toString();
+
+      alert("Zakup został zrealizowany pomyślnie!");
+    }
+    else if (accountBalance < ticketPrice) {
+      alert("Niewystarczające saldo konta. Proszę doładować konto.");
+    }
+    else {
+      alert("Brak wolnych miejsc na seans... Przepraszamy.");
+    }
   }
+
 </script>
 </body>
 </html>

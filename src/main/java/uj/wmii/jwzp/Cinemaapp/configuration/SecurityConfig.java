@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.UserService;
+import uj.wmii.jwzp.Cinemaapp.web.CustomAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -30,18 +31,27 @@ public class SecurityConfig {
     }
 
     @Bean
+    public CustomAuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        System.out.println("Configuring security...");
+
         http
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/registration", "/login", "/screenings/create").permitAll()
-                .antMatchers("/cinemas/**", "/cinemaHalls/**", "/screenings/**", "/movies/**", "/seats/**").permitAll()
+                .antMatchers("/cinemas/**", "/cinemaHalls/**", "/movies/**", "/seats/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/users").permitAll()
+                .antMatchers("/screenings/book").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/")
+                .permitAll()
+                .successHandler(authenticationSuccessHandler())
                 .and()
                 .logout()
                 .logoutUrl("/logout")

@@ -1,14 +1,14 @@
-package uj.wmii.jwzp.Cinemaapp.web;
+package uj.wmii.jwzp.Cinemaapp.DataTransferObjects;
 
-public class UserRegistrationDto {
+public class UserRegistrationDTO {
     private String name;
     private String email;
     private String password;
 
 
-    public UserRegistrationDto() {}
+    public UserRegistrationDTO() {}
 
-    public UserRegistrationDto(String name, String email, String password) {
+    public UserRegistrationDTO(String name, String email, String password) {
         super();
         this.name = name;
         this.email = email;

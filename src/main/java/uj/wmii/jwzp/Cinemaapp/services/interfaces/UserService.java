@@ -1,7 +1,8 @@
 package uj.wmii.jwzp.Cinemaapp.services.interfaces;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import uj.wmii.jwzp.Cinemaapp.models.User;
-import uj.wmii.jwzp.Cinemaapp.web.UserRegistrationDto;
+import uj.wmii.jwzp.Cinemaapp.DataTransferObjects.UserRegistrationDTO;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -11,11 +12,15 @@ public interface UserService extends UserDetailsService {
 
     User getUserById(Long id);
 
+    UserDetails loadUserByUsername(String username);
+
+    User getUserByEmail(String email);
+
     List<User> getUsers();
 
     User addUser(User user);
 
-    User registerUser(UserRegistrationDto user);
+    User registerUser(UserRegistrationDTO user);
 
     String deleteUser(Long id);
 

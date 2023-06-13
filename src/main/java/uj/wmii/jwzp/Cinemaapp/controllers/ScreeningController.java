@@ -9,13 +9,16 @@ import uj.wmii.jwzp.Cinemaapp.DataTransferObjects.ScreeningDTO;
 import uj.wmii.jwzp.Cinemaapp.models.CinemaHall;
 import uj.wmii.jwzp.Cinemaapp.models.Movie;
 import uj.wmii.jwzp.Cinemaapp.models.Screening;
+import uj.wmii.jwzp.Cinemaapp.models.User;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.CinemaHallService;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.MovieService;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.ScreeningService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
+import uj.wmii.jwzp.Cinemaapp.services.interfaces.UserService;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +33,14 @@ public class ScreeningController {
     private final ScreeningService screeningService;
     private final MovieService movieService;
     private final CinemaHallService cinemaHallService;
+    private final UserService userService;
 
     @Autowired
-    public ScreeningController(ScreeningService screeningService, MovieService movieService, CinemaHallService cinemaHallService) {
+    public ScreeningController(ScreeningService screeningService, MovieService movieService, CinemaHallService cinemaHallService, UserService userService) {
         this.screeningService = screeningService;
         this.movieService = movieService;
         this.cinemaHallService = cinemaHallService;
+        this.userService = userService;
     }
 
     @GetMapping("/{screeningId}")
@@ -219,10 +224,8 @@ public class ScreeningController {
 
     @PostMapping("/details")
     public String showScreeningDetails(@RequestParam("screeningId") Long screeningId, Model model) {
-        // Pobierz seans na podstawie przesłanego ID seansu
         Screening screening = screeningService.getScreeningById(screeningId);
 
-        // Przekazanie seansu do modelu, aby wyświetlić jego szczegóły
         model.addAttribute("screening", screening);
         model.addAttribute("availableSeats", screening.getHall().getNumOfFreeSeats());
 
@@ -230,14 +233,17 @@ public class ScreeningController {
     }
 
     @PostMapping("/book")
-    public String bookScreening(@RequestParam("screeningId") Long screeningId, Model model) {
+    public String bookScreening(@RequestParam("screeningId") Long screeningId, @SessionAttribute("loggedInUser") User user, Model model) {
         Screening screening = screeningService.getScreeningById(screeningId);
 
-        // Przetwarzaj dalszą logikę rezerwacji, np. sprawdzanie dostępności miejsc, itp.
-        if (screening.getHall().getNumOfFreeSeats() == 0)
+        int numOfSeats = screening.getHall().getNumOfFreeSeats();
+        if (numOfSeats == 0)
             return "NoSeatsAvailable";
 
-        // Dodaj odpowiednie dane do modelu
+        BigDecimal accountBalance = user.getAccountBalance();
+        model.addAttribute("accountBalance", accountBalance);
+
+        model.addAttribute("numOfSeats", numOfSeats);
         model.addAttribute("screening", screening);
         model.addAttribute("availableSeats", screening.getHall().getNumOfFreeSeats());
         model.addAttribute("ticketPrice", screening.getTicketPrice());
