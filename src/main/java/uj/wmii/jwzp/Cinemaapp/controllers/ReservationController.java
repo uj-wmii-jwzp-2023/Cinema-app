@@ -12,6 +12,7 @@ import uj.wmii.jwzp.Cinemaapp.models.Seat;
 import uj.wmii.jwzp.Cinemaapp.models.User;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.ReservationService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -84,19 +85,21 @@ public class ReservationController {
     public ResponseEntity<String> updateReservation(@PathVariable("reservationId") Long id,
                                                     @RequestParam User user,
                                                     @RequestParam Seat seat,
-                                                    @RequestParam Screening screening) {
+                                                    @RequestParam Screening screening,
+                                                    @RequestParam BigDecimal price) {
         LOGGER.debug("Updating reservation with id: {}",id);
 
-        String updatedReservation = service.updateReservation(id,user,seat,screening);
+        String updatedReservation = service.updateReservation(id,user,seat,screening,price);
 
         LOGGER.info("Updated reservation with id {}: {}",id,updatedReservation);
         return ResponseEntity.ok(updatedReservation);
     }
     @PatchMapping("{reservationId}")
     public ResponseEntity<String> patchReservation(@PathVariable("reservationId") Long id,
-                                                    @RequestParam User user,
-                                                    @RequestParam Seat seat,
-                                                    @RequestParam Screening screening) {
+                                                   @RequestParam User user,
+                                                   @RequestParam Seat seat,
+                                                   @RequestParam Screening screening,
+                                                   @RequestParam BigDecimal price) {
         LOGGER.debug("Patching reservation with id: {}",id);
 
         Reservation reservation = service.getReservationById(id);
@@ -106,7 +109,7 @@ public class ReservationController {
             return new ResponseEntity<>("Reservation with id " + id + " does not exist",HttpStatus.NOT_FOUND);
         }
 
-        String patchedReservation = service.patchReservation(id,user,seat,screening);
+        String patchedReservation = service.patchReservation(id,user,seat,screening,price);
 
         LOGGER.info("Patched reservation with id {}: {}",id,patchedReservation);
         return ResponseEntity.ok(patchedReservation);

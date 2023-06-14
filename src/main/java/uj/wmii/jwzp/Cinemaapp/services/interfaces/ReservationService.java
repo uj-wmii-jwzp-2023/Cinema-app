@@ -5,6 +5,7 @@ import uj.wmii.jwzp.Cinemaapp.models.Screening;
 import uj.wmii.jwzp.Cinemaapp.models.Seat;
 import uj.wmii.jwzp.Cinemaapp.models.User;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ReservationService {
@@ -13,6 +14,6 @@ public interface ReservationService {
     List<Reservation> getReservationsByUserId(Long id);
     Reservation addReservation(Reservation reservation);
     String deleteReservation(Long id);
-    String updateReservation(Long id, User user, Seat seat, Screening screening);
-    String patchReservation(Long id, User user, Seat seat, Screening screening);
+    String updateReservation(Long id, User user, Seat seat, Screening screening, BigDecimal price);
+    String patchReservation(Long id, User user, Seat seat, Screening screening, BigDecimal price);
 }

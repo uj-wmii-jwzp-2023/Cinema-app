@@ -9,6 +9,7 @@ import uj.wmii.jwzp.Cinemaapp.models.User;
 import uj.wmii.jwzp.Cinemaapp.repositories.ReservationRepository;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.ReservationService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,21 +43,28 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation addReservation(Reservation reservation) {
+        var user = reservation.getUser();
+        user.setAccountBalance(user.getAccountBalance().subtract(reservation.getPrice()));
         return repository.save(reservation);
     }
 
     @Override
     public String deleteReservation(Long id) {
+        var reservation = getReservationById(id);
+        if(reservation != null) {
+            var user = reservation.getUser();
+            user.setAccountBalance(user.getAccountBalance().add(reservation.getPrice()));
+        }
         repository.deleteById(id);
         return "User account with id " + id + " was deleted";
     }
 
     @Override
-    public String updateReservation(Long id, User user, Seat seat, Screening screening) {
+    public String updateReservation(Long id, User user, Seat seat, Screening screening, BigDecimal price) {
         Reservation reservation = getReservationById(id);
 
         if(reservation == null) {
-            Reservation newReservation = new Reservation(user,seat,screening);
+            Reservation newReservation = new Reservation(user,seat,screening,price);
 
             addReservation(newReservation);
             return "Reservation created";
@@ -79,6 +87,11 @@ public class ReservationServiceImpl implements ReservationService {
             result += "Screening Changed";
         }
 
+        if(!reservation.getPrice().equals(price)) {
+            reservation.setPrice(price);
+            result += "Price Changed";
+        }
+
         if (result.length() == 0)
             return "Nothing changed";
         else
@@ -86,7 +99,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public String patchReservation(Long id, User user, Seat seat, Screening screening) {
+    public String patchReservation(Long id, User user, Seat seat, Screening screening, BigDecimal price) {
         Reservation reservation = getReservationById(id);
 
         if(reservation == null) {
@@ -108,6 +121,11 @@ public class ReservationServiceImpl implements ReservationService {
         if(!reservation.getScreening().equals(screening)) {
             reservation.setScreening(screening);
             result += "Screening Changed";
+        }
+
+        if(!reservation.getPrice().equals(price)) {
+            reservation.setPrice(price);
+            result += "Price Changed";
         }
 
         if (result.length() == 0)
