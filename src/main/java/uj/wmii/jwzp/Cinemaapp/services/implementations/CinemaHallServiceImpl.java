@@ -83,17 +83,17 @@ public class CinemaHallServiceImpl implements CinemaHallService {
 
         String result = "";
 
-        if(!cinema.equals(cinemaHall.getCinema())) {
+        if(cinema != null && !cinema.equals(cinemaHall.getCinema())) {
             cinemaHall.setCinema(cinema);
             result += "Cinema changed\n";
         }
 
-        if(!screenings.equals(cinemaHall.getScreenings())) {
+        if(screenings != null && !screenings.equals(cinemaHall.getScreenings())) {
             cinemaHall.setScreenings(screenings);
             result += "Screenings changed\n";
         }
 
-        if(!seats.equals(cinemaHall.getSeats())) {
+        if(seats != null && !seats.equals(cinemaHall.getSeats())) {
             cinemaHall.setSeats(seats);
             result += "Seats changed\n";
         }

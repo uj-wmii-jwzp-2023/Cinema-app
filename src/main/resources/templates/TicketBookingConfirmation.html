@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
   <meta charset="utf-8">
   <title>Potwierdzenie zamówienia</title>
+  <link rel="icon" type="image/x-icon" href="/static/favicons/favicon-payment.ico">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -58,6 +59,20 @@
     .confirm-button:hover {
       background-color: #45a049;
     }
+
+    .return-button {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .return-button:hover {
+      background-color: #555;
+    }
   </style>
 </head>
 <body>
@@ -77,6 +92,8 @@
     <strong>Saldo konta:</strong> <span id="account-balance" th:text="${accountBalance}"> zł</span>
   </div>
   <button class="confirm-button" onclick="confirmTransaction()">Potwierdź transakcję</button>
+  <br><br>
+  <button class="return-button" onclick="goToHomePage()">Powrót na stronę główną</button>
 </div>
 
 <script>
@@ -102,6 +119,9 @@
     }
   }
 
+  function goToHomePage() {
+    window.location.href = "/";
+  }
 </script>
 </body>
 </html>

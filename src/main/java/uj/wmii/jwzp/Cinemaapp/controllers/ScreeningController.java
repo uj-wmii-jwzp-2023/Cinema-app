@@ -16,10 +16,10 @@ import uj.wmii.jwzp.Cinemaapp.services.interfaces.ScreeningService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
-import uj.wmii.jwzp.Cinemaapp.services.interfaces.UserService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,14 +33,12 @@ public class ScreeningController {
     private final ScreeningService screeningService;
     private final MovieService movieService;
     private final CinemaHallService cinemaHallService;
-    private final UserService userService;
 
     @Autowired
-    public ScreeningController(ScreeningService screeningService, MovieService movieService, CinemaHallService cinemaHallService, UserService userService) {
+    public ScreeningController(ScreeningService screeningService, MovieService movieService, CinemaHallService cinemaHallService) {
         this.screeningService = screeningService;
         this.movieService = movieService;
         this.cinemaHallService = cinemaHallService;
-        this.userService = userService;
     }
 
     @GetMapping("/{screeningId}")
@@ -222,6 +220,25 @@ public class ScreeningController {
         List<Screening> screenings = screeningService.getScreenings();
         model.addAttribute("screenings", screenings);
         return "ShowAllScreenings";
+    }
+
+    @GetMapping("/showToday")
+    public String getTodatScreenings(Model model) {
+        List<Screening> screenings = screeningService.getScreenings();
+        List<Screening> todayScreenings = new ArrayList<>();
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endOfDay = now.with(LocalTime.MAX);
+
+        for (Screening screening : screenings) {
+            LocalDateTime startTime = screening.getStartTime();
+            if (startTime.isBefore(endOfDay) && startTime.isAfter(now)) {
+                todayScreenings.add(screening);
+            }
+        }
+
+        model.addAttribute("screenings", todayScreenings);
+        return "ShowScreenings";
     }
 
     @PostMapping("/details")

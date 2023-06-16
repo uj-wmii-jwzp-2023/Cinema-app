@@ -113,9 +113,16 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public void addRole(Role role) { roles.add(role); }
+
     public BigDecimal getAccountBalance() { return accountBalance; }
 
     public void setAccountBalance(BigDecimal accountBalance) { this.accountBalance = accountBalance; }
+
+    public void addMoneyToBalance(int amount) {
+        BigDecimal amountToAdd = BigDecimal.valueOf(amount);
+        accountBalance = accountBalance.add(amountToAdd);
+    }
 
     @Override
     public boolean equals(Object o) {

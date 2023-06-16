@@ -1,33 +1,67 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      lang="pl">
 <head>
-  <meta charset="ISO-8859-1">
-  <title>Registration and Login App</title>
-
+  <meta charset="utf-8">
+  <title>Cinema App</title>
+  <link rel="icon" type="image/x-icon" href="/static/favicons/favicon.ico">
   <link rel="stylesheet"
         href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
         crossorigin="anonymous">
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="/static/js/BasicScript.js"></script>
+  <link rel="stylesheet" href="/static/css/BasicStyles.css">
 </head>
 <body>
 <!-- create navigation bar ( header) -->
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed"
-              data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-              aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span> <span
-              class="icon-bar"></span> <span class="icon-bar"></span> <span
-              class="icon-bar"></span>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#" th:href="@{/}">Registration and Login Module</a>
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
+        <li>
+          <a href="#" onclick="loadPage('pages/homePage')">Strona główna</a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Konto <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#" onclick=loadUserData()>Wyświetl dane</a></li>
+            <li><a href="#" onclick="loadPage('pages/password')">Zmień hasło</a></li>
+            <li><a href="#" onclick="loadTopUpWallet()">Doładuj portfel</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Seanse <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#" onclick="loadTodayScreenings()">Wyświetl dzisiejsze seanse</a></li>
+            <li><a href="#" onclick="loadShowAllScreenings()">Zapisz się na seans</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Galeria <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#" onclick="loadPage('pages/filmPosters')">Najlepsze plakaty filmowe</a></li>
+          </ul>
+        </li>
+        <li sec:authorize="hasAuthority('ADMIN')" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dodaj <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#" onclick=loadCreateScreeningForm()>Seans</a></li>
+          </ul>
+        </li>
+        <li sec:authorize="isAuthenticated"><a href="#" onclick="logout()">Wyloguj się</a></li>
       </ul>
     </div>
   </div>
@@ -36,9 +70,7 @@
 <br>
 <br>
 
-<div class="container">
-  <h1>Login successful</h1>
-  Welcome <span sec:authentication="principal.username">User</span>
+<div id="content" class="container">
 </div>
 </body>
 </html>

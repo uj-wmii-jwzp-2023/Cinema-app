@@ -1,0 +1,9 @@
+<div class="userData">
+  <h4>Cześć <span th:text="${user.name}"></span>, Twój aktualny stan konta to: <span th:text="${user.accountBalance}"></span></h4>
+
+  <form action="/users/topUpWallet" method="post" id="topUpForm">
+    <label for="amount">Wpisz kwotę doładowania:</label>
+    <input type="number" id="amount" name="amount" required><br><br>
+    <input type="submit" value="Potwierdź" id="submitBtn">
+  </form>
+</div>

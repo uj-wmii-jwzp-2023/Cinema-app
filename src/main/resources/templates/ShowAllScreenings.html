@@ -11,7 +11,7 @@
     <!-- Pętla foreach iterująca po seansach -->
     <!-- Używamy th:each, jeśli korzystamy z Thymeleaf -->
     <!-- Zmienne oznaczone symbolem @ są pobierane z modelu -->
-    <li th:each="screening : ${screenings}">
+    <li th:each="screening, iterStat : ${screenings}">
         <!-- Wyświetlanie informacji o seansie -->
         <p><u><i>Nazwa seansu: <span th:text="${screening.name}"></span></i></u></p>
         <p>Godzina rozpoczęcia: <span th:text="${#temporals.format(screening.startTime, 'yyyy-MM-dd HH:mm')}"></span></p>
@@ -27,13 +27,16 @@
             </li>
         </ul>
         <!-- Dodaj przyciski CHECK DETAILS -->
-        <form th:action="@{/screenings/details}" method="post">
+        <form th:action="@{/screenings/details}" method="post" th:id="'screeningForm-' + ${iterStat.index}">
             <!-- Ukryte pole z ID seansu -->
             <input type="hidden" name="screeningId" th:value="${screening.id}" />
-            <button type="submit">CHECK DETAILS</button>
+            <button type="submit" class="checkBtn" data-formid="${iterStat.index}">CHECK DETAILS</button>
+            <br>
         </form>
+        <br>
     </li>
 </ul>
+
 
 </body>
 </html>

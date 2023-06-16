@@ -5,14 +5,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import uj.wmii.jwzp.Cinemaapp.models.Role;
 import uj.wmii.jwzp.Cinemaapp.models.User;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.UserService;
+import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/users")
 public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -105,6 +111,67 @@ public class UserController {
         String patchedUser = service.patchUser(id, email, name, password);
         LOGGER.info("Patched user with id {}: {}", id, patchedUser);
         return new ResponseEntity<>(patchedUser, HttpStatus.OK);
+    }
+
+    @PostMapping("/addRole/{userId}")
+    public ResponseEntity<User> addRoleToUser(@PathVariable("userId") Long id,
+                                              @RequestBody Role role) {
+        LOGGER.debug("Adding role {} to user", role);
+
+        User user = service.getUserById(id);
+
+        if (user == null) {
+            LOGGER.info("User with id {} not found", id);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        user.addRole(role);
+
+        service.deleteUser(user.getId());
+        service.addUser(user);
+
+        LOGGER.info("Added role to user with id {}", user.getId());
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/getData")
+    public String getUserData(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        // Pobranie użytkownika na podstawie adresu email
+        User user = service.getUserByEmail(email);
+
+        model.addAttribute("user", user);
+        return "accountDetails";
+    }
+
+    @GetMapping("/topUpWallet")
+    public String topUpWallet (Model model, HttpSession session) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        // Pobranie użytkownika na podstawie adresu email
+        User user = service.getUserByEmail(email);
+
+        model.addAttribute("user", user);
+        session.setAttribute("user", user);
+        return "topUpWallet";
+    }
+
+    @PostMapping("/topUpWallet")
+    public String topUpWallet(@RequestParam("amount") int amount, HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        user.addMoneyToBalance(amount);
+
+        service.deleteUser(user.getId());
+        service.addUser(user);
+
+        session.setAttribute("loggedInUser", user);
+
+        model.addAttribute("user", user);
+        return "walletToppedUp";
     }
 
     @PostMapping("{userId}/balance")

@@ -1,0 +1,54 @@
+<!-- Wyświetlanie aktualnej daty i godziny -->
+<div id="currentDateTime"></div>
+
+<script>
+  // Funkcja aktualizująca wyświetlanie aktualnej daty i godziny co sekundę
+  function updateDateTime() {
+    var now = new Date();
+    var dateTimeString = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+    document.getElementById('currentDateTime').textContent = 'Aktualna data i godzina: ' + dateTimeString;
+  }
+
+  // Aktualizuj datę i godzinę po załadowaniu strony
+  updateDateTime();
+
+  // Aktualizuj datę i godzinę co sekundę
+  setInterval(updateDateTime, 1000);
+</script>
+
+<!-- Sprawdź czy są dzisiejsze seanse -->
+<div th:if="${screenings.isEmpty()}">
+  <p>Dzisiaj nie są rozgrywane już żadne seanse.</p>
+  <p>Sprawdź jutro.</p>
+</div>
+
+<!-- Tworzenie listy seansów -->
+<ul th:if="${not screenings.isEmpty()}">
+  <!-- Pętla foreach iterująca po seansach -->
+  <!-- Używamy th:each, jeśli korzystamy z Thymeleaf -->
+  <!-- Zmienne oznaczone symbolem @ są pobierane z modelu -->
+  <li th:each="screening, iterStat : ${screenings}">
+    <!-- Wyświetlanie informacji o seansie -->
+    <p><u><i>Nazwa seansu: <span th:text="${screening.name}"></span></i></u></p>
+    <p>Godzina rozpoczęcia: <span th:text="${#temporals.format(screening.startTime, 'yyyy-MM-dd HH:mm')}"></span></p>
+    <p>Godzina zakończenia: <span th:text="${#temporals.format(screening.endTime, 'yyyy-MM-dd HH:mm')}"></span></p>
+    <!-- Wyświetlanie informacji o filmach -->
+    <p>Repertuar: </p>
+    <ul>
+      <!-- Pętla foreach iterująca po filmach w seansie -->
+      <li th:each="movie : ${screening.movies}">
+        <!-- Wyświetlanie informacji o filmie -->
+        <p><b>Tytuł filmu: <span th:text="${movie.title}"></span></b></p>
+        <p>Czas trwania: <span th:text="${movie.duration.toHours()} + 'H' + ${movie.duration.toMinutes() % 60} + 'M' + ${movie.duration.getSeconds() % 60} + 'S'"></span></p>
+      </li>
+    </ul>
+    <!-- Dodaj przyciski CHECK DETAILS -->
+    <form th:action="@{/screenings/details}" method="post" th:id="'screeningForm-' + ${iterStat.index}">
+      <!-- Ukryte pole z ID seansu -->
+      <input type="hidden" name="screeningId" th:value="${screening.id}" />
+      <button type="submit" class="checkBtn" data-formid="${iterStat.index}">CHECK DETAILS</button>
+      <br>
+    </form>
+    <br>
+  </li>
+</ul>
