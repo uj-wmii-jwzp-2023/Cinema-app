@@ -15,6 +15,7 @@ import uj.wmii.jwzp.Cinemaapp.repositories.UserRepository;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.UserService;
 import uj.wmii.jwzp.Cinemaapp.DataTransferObjects.UserRegistrationDTO;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -224,5 +225,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return "Nothing changed";
         else
             return result;
+    }
+
+    @Transactional
+    public String addBalance(User user, BigDecimal balance) {
+        user.setAccountBalance(user.getAccountBalance().add(balance));
+
+        repository.save(user);
+
+        return "Updated balance of user with id: " + user.getId() + ".";
     }
 }

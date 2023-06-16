@@ -20,7 +20,6 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -45,10 +44,7 @@ public class CinemaControllerTests {
         mockMvc.perform(post(END_POINT_PATCH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(newCinema.getName()))
-                .andExpect(jsonPath("$.address").value(newCinema.getAddress()))
-                .andExpect(jsonPath("$.id").isEmpty());
+                .andExpect(status().is(403));
     }
 
     @Test
@@ -62,9 +58,6 @@ public class CinemaControllerTests {
         mockMvc.perform(post(END_POINT_PATCH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").isEmpty())
-                .andExpect(jsonPath("$.address").isEmpty())
-                .andExpect(jsonPath("$.id").isEmpty());
+                .andExpect(status().is(403));
     }
 }

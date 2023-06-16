@@ -9,6 +9,7 @@ import uj.wmii.jwzp.Cinemaapp.repositories.ScreeningRepository;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.ScreeningService;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -48,13 +49,13 @@ public class ScreeningServiceImpl implements ScreeningService {
     }
 
     @Transactional
-    public String updateScreening(Long id, String name, CinemaHall hall, List<Movie> movies, LocalDateTime startTime, LocalDateTime endTime) {
+    public String updateScreening(Long id, String name, CinemaHall hall, List<Movie> movies, LocalDateTime startTime, LocalDateTime endTime, BigDecimal ticketPrice) {
         if(checkCollisions(id,hall,startTime,endTime)) {
             return null;
         }
         Screening screening = repository.findById(id).orElse(null);
         if(screening == null) {
-            screening = new Screening(name,hall,movies,startTime,endTime);
+            screening = new Screening(name,hall,movies,startTime,endTime,ticketPrice);
 
             addScreening(screening);
             return "Screening created";
@@ -94,7 +95,7 @@ public class ScreeningServiceImpl implements ScreeningService {
     }
 
     @Transactional
-    public String patchScreening(Long id, String name, CinemaHall hall, List<Movie> movies, LocalDateTime startTime, LocalDateTime endTime) {
+    public String patchScreening(Long id, String name, CinemaHall hall, List<Movie> movies, LocalDateTime startTime, LocalDateTime endTime, BigDecimal ticketPrice) {
         if(checkCollisions(id,hall,startTime,endTime)) {
             return null;
         }

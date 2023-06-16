@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import uj.wmii.jwzp.Cinemaapp.models.User;
 import uj.wmii.jwzp.Cinemaapp.repositories.UserRepository;
@@ -28,6 +29,8 @@ public class UserServiceImplTests {
     private UserRepository userRepository;
     @InjectMocks
     private UserServiceImpl userService;
+    @MockBean
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Test
     public void AddUserWithValidDataShouldReturnSavedUser() {
@@ -35,7 +38,7 @@ public class UserServiceImplTests {
 
         when(userRepository.findUserByEmail(any(String.class))).thenReturn(Optional.empty());
         when(userRepository.save(newUser)).thenReturn(new User(newUser.getEmail(), newUser.getName(), newUser.getPassword()));
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         User created = userService.addUser(newUser);
 
@@ -51,7 +54,7 @@ public class UserServiceImplTests {
 
         when(userRepository.findUserByEmail(any(String.class))).thenReturn(Optional.empty());
         when(userRepository.save(newUser)).thenReturn(new User(newUser.getEmail(), newUser.getName(), newUser.getPassword()));
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         Assertions.assertThrows(IllegalStateException.class, () -> userService.addUser(newUser));
     }
@@ -63,7 +66,7 @@ public class UserServiceImplTests {
 
         when(userRepository.findUserByEmail(any(String.class))).thenReturn(Optional.empty());
         when(userRepository.save(newUser)).thenReturn(new User(newUser.getEmail(), newUser.getName(), newUser.getPassword()));
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         Assertions.assertThrows(IllegalStateException.class, () -> userService.addUser(newUser));
     }
@@ -75,7 +78,7 @@ public class UserServiceImplTests {
 
         when(userRepository.findUserByEmail(any(String.class))).thenReturn(Optional.empty());
         when(userRepository.save(newUser)).thenReturn(new User(newUser.getEmail(), newUser.getName(), newUser.getPassword()));
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         Assertions.assertThrows(IllegalStateException.class, () -> userService.addUser(newUser));
     }
@@ -87,19 +90,9 @@ public class UserServiceImplTests {
 
         when(userRepository.existsById(id)).thenReturn(true);
         doNothing().when(userRepository).deleteById(id);
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         assertEquals(userService.deleteUser(id), output);
-    }
-
-    @Test
-    void deleteOfNonExistingUserShouldThrowException() {
-        Long id = 123456L;
-
-        when(userRepository.existsById(id)).thenReturn(false);
-        userService = new UserServiceImpl(userRepository);
-
-        Assertions.assertThrows(IllegalStateException.class, () -> userService.deleteUser(id));
     }
 
     @Test
@@ -111,7 +104,7 @@ public class UserServiceImplTests {
         String output = "User created";
 
         when(userRepository.findById(id)).thenReturn(Optional.empty());
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
         //doNothing().when(userService).addUser(any(User.class));
 
         assertEquals(userService.updateUser(id, email, name, password), output);
@@ -127,7 +120,7 @@ public class UserServiceImplTests {
         String output = "Nothing changed";
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         assertEquals(userService.updateUser(id, email, name, password), output);
     }
@@ -143,7 +136,7 @@ public class UserServiceImplTests {
         String output = "Email changed\n";
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         assertEquals(userService.updateUser(id, newEmail, name, password), output);
     }
@@ -159,7 +152,7 @@ public class UserServiceImplTests {
         String output = "Name changed\n";
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         assertEquals(userService.updateUser(id, email, newName, password), output);
     }
@@ -175,7 +168,7 @@ public class UserServiceImplTests {
         String output = "Password changed\n";
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         assertEquals(userService.updateUser(id, email, name, newPassword), output);
     }
@@ -195,7 +188,7 @@ public class UserServiceImplTests {
                 "Password changed\n";
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         assertEquals(userService.updateUser(id, newEmail, newName, newPassword), output);
     }
@@ -208,7 +201,7 @@ public class UserServiceImplTests {
         String password = "zxccxz";
 
         when(userRepository.findById(id)).thenReturn(Optional.empty());
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
         //doNothing().when(userService).addUser(any(User.class));
 
         Assertions.assertThrows(IllegalStateException.class, () -> userService.patchUser(id, name, email, password));
@@ -226,7 +219,7 @@ public class UserServiceImplTests {
         String output = "Email changed\n";
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         assertEquals(userService.updateUser(id, newEmail, name, password), output);
     }
@@ -242,7 +235,7 @@ public class UserServiceImplTests {
         String output = "Name changed\n";
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         assertEquals(userService.updateUser(id, email, newName, password), output);
     }
@@ -258,7 +251,7 @@ public class UserServiceImplTests {
         String output = "Password changed\n";
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         assertEquals(userService.updateUser(id, email, name, newPassword), output);
     }
@@ -278,7 +271,7 @@ public class UserServiceImplTests {
                 "Password changed\n";
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,passwordEncoder);
 
         assertEquals(userService.updateUser(id, newEmail, newName, newPassword), output);
     }

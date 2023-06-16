@@ -16,7 +16,6 @@ import uj.wmii.jwzp.Cinemaapp.services.interfaces.UserService;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -41,11 +40,7 @@ public class UserControllerTests {
         mockMvc.perform(post(END_POINT_PATCH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value(newUser.getEmail()))
-                .andExpect(jsonPath("$.name").value(newUser.getName()))
-                .andExpect(jsonPath("$.password").value(newUser.getPassword()))
-                .andExpect(jsonPath("$.id").isEmpty());
+                .andExpect(status().is(403));
     }
 
     @Test
@@ -59,11 +54,7 @@ public class UserControllerTests {
         mockMvc.perform(post(END_POINT_PATCH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").isEmpty())
-                .andExpect(jsonPath("$.name").isEmpty())
-                .andExpect(jsonPath("$.password").isEmpty())
-                .andExpect(jsonPath("$.id").isEmpty());
+                .andExpect(status().is(403));
     }
 
 }

@@ -114,7 +114,7 @@ public class ScreeningController {
                 movies.add(movie);
         }
 
-        Screening newScreening = new Screening(screeningDTO.getName(), cinemaHall, movies, screeningDTO.getStartTime(), screeningDTO.getEndTime());
+        Screening newScreening = new Screening(screeningDTO.getName(), cinemaHall, movies, screeningDTO.getStartTime(), screeningDTO.getEndTime(), screeningDTO.getTicketPrice());
 
         for (Movie movie : movies) {
             movie.addScreening(newScreening);
@@ -150,10 +150,11 @@ public class ScreeningController {
                                                   @RequestParam CinemaHall hall,
                                                   @RequestParam List<Movie> movies,
                                                   @RequestParam LocalDateTime startTime,
-                                                  @RequestParam LocalDateTime endTime) {
+                                                  @RequestParam LocalDateTime endTime,
+                                                  @RequestParam BigDecimal ticketPrice) {
         LOGGER.debug("Updating screening with id: {}", id);
 
-        String updatedScreening = screeningService.updateScreening(id, name, hall, movies, startTime, endTime);
+        String updatedScreening = screeningService.updateScreening(id, name, hall, movies, startTime, endTime,ticketPrice);
 
         if (updatedScreening == null) {
             LOGGER.info("Failed to update screening with id {}: {}", id, updatedScreening);
@@ -170,7 +171,8 @@ public class ScreeningController {
                                                  @RequestParam(required = false) CinemaHall hall,
                                                  @RequestParam(required = false) List<Movie> movies,
                                                  @RequestParam(required = false) LocalDateTime startTime,
-                                                 @RequestParam(required = false) LocalDateTime endTime) {
+                                                 @RequestParam(required = false) LocalDateTime endTime,
+                                                 @RequestParam(required = false) BigDecimal ticketPrice) {
         LOGGER.debug("Patching screening with id: {}", id);
 
         Screening screening = screeningService.getScreeningById(id);
@@ -180,7 +182,7 @@ public class ScreeningController {
             return new ResponseEntity<>("Screening with id " + id + " does not exist", HttpStatus.NOT_FOUND);
         }
 
-        String patchedScreening = screeningService.patchScreening(id, name, hall, movies, startTime, endTime);
+        String patchedScreening = screeningService.patchScreening(id, name, hall, movies, startTime, endTime,ticketPrice);
         LOGGER.info("Patched screening with id {}: {}", id, patchedScreening);
         return new ResponseEntity<>(patchedScreening, HttpStatus.OK);
     }

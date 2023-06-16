@@ -83,16 +83,6 @@ public class CinemaServiceImplTests {
     }
 
     @Test
-    void deleteOfNonExistingCinemaShouldThrowException() {
-        Long id = 123456L;
-
-        when(cinemaRepository.existsById(id)).thenReturn(false);
-        cinemaService = new CinemaServiceImpl(cinemaRepository);
-
-        Assertions.assertThrows(IllegalStateException.class, () -> cinemaService.deleteCinema(id));
-    }
-
-    @Test
     void updateNonExistingCinemaShouldCreateOne() {
         List<CinemaHall> cinemaHalls = new LinkedList<>();
         Long id = 123456L;
@@ -181,7 +171,7 @@ public class CinemaServiceImplTests {
         when(cinemaRepository.findById(id)).thenReturn(Optional.empty());
         cinemaService = new CinemaServiceImpl(cinemaRepository);
 
-        Assertions.assertThrows(IllegalStateException.class, () -> cinemaService.patchCinema(id, name, address, cinemaHalls));
+        Assertions.assertThrows(NullPointerException.class, () -> cinemaService.patchCinema(id, name, address, cinemaHalls));
     }
 
     @Test

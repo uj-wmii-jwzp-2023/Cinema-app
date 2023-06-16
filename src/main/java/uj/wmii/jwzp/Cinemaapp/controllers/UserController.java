@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import uj.wmii.jwzp.Cinemaapp.models.User;
 import uj.wmii.jwzp.Cinemaapp.services.interfaces.UserService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -104,5 +105,22 @@ public class UserController {
         String patchedUser = service.patchUser(id, email, name, password);
         LOGGER.info("Patched user with id {}: {}", id, patchedUser);
         return new ResponseEntity<>(patchedUser, HttpStatus.OK);
+    }
+
+    @PostMapping("{userId}/balance")
+    public ResponseEntity<String> addBalance(@PathVariable("userId") Long id,
+                                             @RequestParam BigDecimal balance) {
+        LOGGER.debug("Adding {} balance to user with id: {}",balance,id);
+
+        User user = service.getUserById(id);
+
+        if (user == null) {
+            LOGGER.info("User with id {} not found", id);
+            return new ResponseEntity<>("User with id " + id + " does not exist", HttpStatus.NOT_FOUND);
+        }
+
+        String updatedUser = service.addBalance(user,balance);
+        LOGGER.info("Patched user with id {}: {}", id, updatedUser);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 }
